@@ -3,7 +3,7 @@ flow: {phase: 5-implement, producer: agent/GLM-5.3-Flash (E2.3), consumer: App, 
 Dashboard Progetti conforme M1 (F01): KPI strip, filtri a chip, tabella avanzamento, stato vuoto, nuovo progetto.
 */
 import { useCallback, useEffect, useState } from "react";
-import { it, type Progetto, type Utente } from "@ws/shared";
+import { it, type ProgettoConAvanzamento, type Utente } from "@ws/shared";
 import { api, ErroreApi } from "../api.js";
 
 type FiltroStato = "tutti" | "in-linea" | "a-rischio" | "in-ritardo";
@@ -15,7 +15,8 @@ function formattaData(iso: string): string {
 }
 
 export default function Dashboard({ utente }: { utente: Utente }) {
-  const [progetti, setProgetti] = useState<Progetto[]>([]);
+  const [progetti, setProgetti] = useState<ProgettoConAvanzamento[]>([]);
+  const [scadenze, setScadenze] = useState<{ progetto: string; data: string; nome: string; stato: string }[]>([]);
   const [totale, setTotale] = useState(0);
   const [filtroStato, setFiltroStato] = useState<FiltroStato>("tutti");
   const [soloAltaPriorita, setSoloAltaPriorita] = useState(false);
@@ -33,6 +34,18 @@ export default function Dashboard({ utente }: { utente: Utente }) {
       const risposta = await api.progetti(filtri);
       setProgetti(risposta.progetti);
       setTotale(risposta.totale);
+
+      const scadenzeAggregate = await Promise.all(
+        risposta.progetti.map(async p => {
+          try {
+            const { kpi } = await api.kpiProgetto(p.id);
+            return kpi.scadenzeProssime.map(s => ({ progetto: p.nome, data: s.fine, nome: s.nome, stato: s.stato }));
+          } catch {
+            return [];
+          }
+        })
+      );
+      setScadenze(scadenzeAggregate.flat().sort((x, y) => x.data.localeCompare(y.data)));
     } catch {
       setErrore(it.progetti.erroreCaricamento);
     }
@@ -132,13 +145,36 @@ export default function Dashboard({ utente }: { utente: Utente }) {
                     <span className={`badge priorita-${p.priorita}`}>{it.progetti.priorita[p.priorita]}</span>
                   </td>
                   <td>
-                    <span className="valore-nd">{it.progetti.avanzamentoND}</span>
+                    <div className={`avanzamento ${p.stato === "in-ritardo" ? "tardivo" : ""}`}>
+                      <div className="traccia">
+                        <div className="riempimento" style={{ width: `${p.avanzamento ?? 0}%` }} />
+                      </div>
+                      <span className="valore">{p.avanzamento === null ? it.progetti.avanzamentoND : `${p.avanzamento}%`}</span>
+                    </div>
                   </td>
                   <td className="data">{formattaData(p.fine)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </section>
+      )}
+
+      {!vuoto && (
+        <section className="blocco" aria-label="Scadenze imminenti">
+          <h2>{it.progetti.scadenzeTitolo}</h2>
+          {scadenze.length === 0 ? (
+            <p className="scadenze-vuoto">{it.progetti.scadenzeVuoto}</p>
+          ) : (
+            scadenze.map((s, i) => (
+              <div key={`${s.progetto}-${i}`} className={`avviso ${s.stato === "in-ritardo" ? "in-ritardo" : "a-rischio"}`}>
+                <strong>{formattaData(s.data)}</strong>
+                <span>
+                  <strong>{s.progetto}</strong> — {s.nome} ({nomiStato[s.stato as keyof typeof nomiStato] ?? s.stato})
+                </span>
+              </div>
+            ))
+          )}
         </section>
       )}
 
