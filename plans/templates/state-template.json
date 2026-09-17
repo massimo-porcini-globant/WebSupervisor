@@ -1,0 +1,56 @@
+{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "{{INITIATIVE_ID}}",
+  "tier": "{{TIER}}",
+  "vendor": "{{VENDOR}}",
+  "owner": {
+    "name": "{{OWNER_NAME}}",
+    "email": "{{OWNER_EMAIL}}",
+    "role": "{{OWNER_ROLE}}"
+  },
+  "branch": "{{BRANCH}}",
+  "current_phase": 1,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "pending",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/{{INITIATIVE_ID}}/phase-1-specify/prd.md"
+      ]
+    },
+    "gate_2_architecture": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/{{INITIATIVE_ID}}/phase-3-plan/asd.md",
+        "plans/features/{{INITIATIVE_ID}}/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/{{INITIATIVE_ID}}/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "{{TIMESTAMP}}"
+    }
+  ]
+}
