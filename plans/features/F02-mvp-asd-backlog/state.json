@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F02-mvp-asd-backlog",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/002-mvp-asd-backlog",
+  "current_phase": 5,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-17T19:51:25Z",
+      "artifacts": [],
+      "required": "docs/F02-mvp-asd-backlog/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-17T19:54:30Z",
+      "artifacts": [],
+      "required": [
+        "docs/F02-mvp-asd-backlog/phase-3-plan/asd.md",
+        "plans/features/F02-mvp-asd-backlog/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "pending",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/F02-mvp-asd-backlog/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-17T19:50:44Z"
+    }
+  ]
+}
