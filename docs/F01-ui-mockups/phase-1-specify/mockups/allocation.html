@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!--
+flow: {phase: 5-implement, producer: frontend-design (T5), consumer: stakeholder validation (RF-30), gate: gate_3_implementation}
+M4 — Allocazione Risorse. Piano allocazione, sovra-allocazione, carico di lavoro per persona/team (RF-18..21).
+-->
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M4 · Allocazione Risorse — WebSupervisor (mockup)</title>
+<link rel="stylesheet" href="shared/styles.css">
+<style>
+.griglia-allocazione { width: 100%; border-collapse: collapse; background: var(--carta-sollevata); border: 1px solid var(--linea); border-radius: var(--radius-grande); overflow: hidden; }
+.griglia-allocazione th { font-size: 12px; padding: 10px 8px; border-left: 1px solid #E4EAEE; }
+.griglia-allocazione td { padding: 8px 6px; border-bottom: 1px solid #E4EAEE; }
+.griglia-allocazione .col-membro { text-align: left; padding-left: 14px; position: sticky; left: 0; background: var(--carta-sollevata); z-index: 2; }
+.intestazione-settimana { font-variant-numeric: tabular-nums; font-size: 11px; }
+.riga-sovra { background: #FDF6F5; }
+</style>
+</head>
+<body data-modo="popolato">
+
+<header class="testata">
+  <span class="marchio"><strong>Web</strong>Supervisor</span>
+  <nav class="navigazione" aria-label="Principale">
+    <a href="dashboard.html">Progetti</a>
+    <a href="gantt.html">Gantt</a>
+    <a href="team.html">Team</a>
+    <a href="allocation.html" aria-current="page">Risorse</a>
+  </nav>
+  <div class="utente"><span>Sara Bianchi</span><span class="iniziali">SB</span></div>
+</header>
+
+<main class="contenuto">
+  <div class="intestazione-pagina">
+    <h1>Allocazione risorse · Settembre–Ottobre 2026</h1>
+    <div class="azioni">
+      <div class="selettore-stato" role="group" aria-label="Stato del mockup">
+        <button type="button" data-modo="popolato" aria-pressed="true">Popolato</button>
+        <button type="button" data-modo="vuoto" aria-pressed="false">Vuoto</button>
+      </div>
+      <button class="pulsante" type="button" title="RF-23 — funzione reale prevista nello sviluppo">Esporta Excel</button>
+    </div>
+  </div>
+
+  <section class="blocco" id="sezione-avvisi" style="margin-top:0">
+    <div class="avviso in-ritardo">
+      <span>⚠</span>
+      <span><strong>Luca Ferrari è sovra-allocato (125% / 80%)</strong> nella settimana 38 — riequilibrare l'assegnazione tra «Sviluppo front-end» e «App Prenotazioni» (RF-20).</span>
+    </div>
+  </section>
+
+  <section class="blocco" aria-label="Piano di allocazione">
+    <h2>Chi lavora su cosa e quando <small>RF-19 · imposto sulla capacità dichiarata (RF-16)</small></h2>
+    <div style="overflow-x:auto">
+      <table class="griglia-allocazione" id="tabella-allocazione">
+        <thead>
+          <tr>
+            <th scope="col" class="col-membro">Membro</th>
+            <th scope="col" style="min-width:220px">Assegnazione</th>
+            <th scope="col">W38 · 14–18 set</th>
+            <th scope="col">W39 · 21–25 set</th>
+            <th scope="col">W40 · 28 set–2 ott</th>
+            <th scope="col">W41 · 5–9 ott</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-allocazione"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="blocco" aria-label="Carico di lavoro">
+    <h2>Carico di lavoro per persona <small>RF-21 · % impegno settimanale</small></h2>
+    <div style="overflow-x:auto">
+      <table class="griglia-allocazione" id="tabella-carico">
+        <thead>
+          <tr>
+            <th scope="col" class="col-membro">Membro</th>
+            <th scope="col">W38</th><th scope="col">W39</th><th scope="col">W40</th><th scope="col">W41</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-carico"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="vuoto" id="stato-vuoto" hidden>
+    <span class="icona" aria-hidden="true">📊</span>
+    <h2>Nessuna allocazione</h2>
+    <p>Assegna i membri del team alle attività per pianificare il carico di lavoro e individuare le sovra-allocazioni.</p>
+    <button class="pulsante primario" type="button">Assegna il primo membro</button>
+  </div>
+
+  <p class="nota-mockup">Mockup di alta fedeltà — F01-ui-mockups (RF-28). Le percentuali si intendono sull'impegno settimanale; valori superiori alla capacità indicano sovra-allocazione (riga evidenziata e campanello di avviso).</p>
+</main>
+
+<script src="shared/data.js"></script>
+<script>
+const MEMBRI = Object.fromEntries(MOCK.membri.map(m => [m.id, m]));
+const SETT = ["W38", "W39", "W40", "W41"];
+// impegno per membro/settimana (% capacità) — m2 in sovra-allocazione su W38
+const IMPEGNO = {
+  m1: { W38: 100, W39: 90, W40: 80, W41: 60 },
+  m2: { W38: 125, W39: 95, W40: 80, W41: 70 },
+  m3: { W38: 70, W39: 40, W40: 30, W41: 20 },
+  m4: { W38: 60, W39: 60, W40: 45, W41: 30 },
+  m5: { W38: 85, W39: 30, W40: 25, W41: 20 }
+};
+const ATTIVITA_PER_MEMBRO = {
+  m1: ["Progettazione API · P1", "Pianificazione Q4"],
+  m2: ["Sviluppo front-end · P1", "App Prenotazioni · P4"],
+  m3: ["Design interfaccia · P1"],
+  m4: ["Progettazione API · P1"],
+  m5: ["Setup ambiente · P1"]
+};
+
+function render() {
+  const vuoto = document.body.dataset.modo === "vuoto";
+  ["sezione-avvisi", "sezione-progetti"].forEach(id => { const el = document.getElementById(id); if (el) el.hidden = vuoto; });
+  document.querySelectorAll(".blocco").forEach(b => b.hidden = vuoto);
+  document.getElementById("stato-vuoto").hidden = !vuoto;
+  if (vuoto) return;
+
+  document.getElementById("corpo-allocazione").innerHTML = MOCK.membri.map(m => {
+    const inSovra = SETT.some(s => IMPEGNO[m.id][s] > m.capacita);
+    const assegni = ATTIVITA_PER_MEMBRO[m.id].map(a => `<span class="tag-competenza">${a}</span>`).join(" ");
+    return `
+    <tr class="${inSovra ? "riga-sovra" : ""}">
+      <td class="col-membro"><strong>${m.nome}</strong><br><span style="font-size:12px;color:var(--inchiostro-secondario)">${m.ruolo}</span></td>
+      <td>${assegni}</td>
+      ${SETT.map(w => {
+        const v = IMPEGNO[m.id][w];
+        const sovra = v > m.capacita;
+        return `<td><div class="cella-carico ${sovra ? "sovra" : ""}"><div class="carico" style="width:${Math.min(100, v)}%"></div><span class="percento">${v}%</span></div></td>`;
+      }).join("")}
+    </tr>`;
+  }).join("");
+
+  document.getElementById("corpo-carico").innerHTML = MOCK.membri.map(m => `
+    <tr>
+      <td class="col-membro"><strong>${m.nome}</strong></td>
+      ${SETT.map(w => {
+        const v = IMPEGNO[m.id][w];
+        const sovra = v > m.capacita;
+        return `<td><div class="cella-carico ${sovra ? "sovra" : ""}"><div class="carico" style="width:${Math.min(100, v)}%"></div><span class="percento">${v}%</span></div></td>`;
+      }).join("")}
+    </tr>`).join("");
+}
+render();
+
+document.querySelectorAll(".selettore-stato button").forEach(b =>
+  b.addEventListener("click", () => {
+    document.body.dataset.modo = b.dataset.modo;
+    document.querySelectorAll(".selettore-stato button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    render();
+  })
+);
+</script>
+</body>
+</html>

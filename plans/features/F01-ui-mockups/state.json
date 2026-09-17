@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F01-ui-mockups",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/001-ui-mockups",
+  "current_phase": 7,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-17T15:10:33Z",
+      "artifacts": [],
+      "required": "docs/F01-ui-mockups/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-17T15:14:22Z",
+      "artifacts": [],
+      "required": [
+        "docs/F01-ui-mockups/phase-3-plan/asd.md",
+        "plans/features/F01-ui-mockups/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "passed",
+      "timestamp": "2026-09-17T15:48:45Z",
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "passed",
+      "timestamp": "2026-09-17T15:49:08Z",
+      "artifacts": [],
+      "required": [
+        "docs/F01-ui-mockups/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-17T15:08:40Z"
+    }
+  ]
+}

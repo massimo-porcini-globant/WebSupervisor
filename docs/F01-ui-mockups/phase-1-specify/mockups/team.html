@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--
+flow: {phase: 5-implement, producer: frontend-design (T4), consumer: stakeholder validation (RF-30), gate: gate_3_implementation}
+M3 — Gestione Team. Anagrafica membri, competenze, disponibilità, assenze (RF-14..16).
+-->
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M3 · Gestione Team — WebSupervisor (mockup)</title>
+<link rel="stylesheet" href="shared/styles.css">
+</head>
+<body data-modo="popolato">
+
+<header class="testata">
+  <span class="marchio"><strong>Web</strong>Supervisor</span>
+  <nav class="navigazione" aria-label="Principale">
+    <a href="dashboard.html">Progetti</a>
+    <a href="gantt.html">Gantt</a>
+    <a href="team.html" aria-current="page">Team</a>
+    <a href="allocation.html">Risorse</a>
+  </nav>
+  <div class="utente"><span>Sara Bianchi</span><span class="iniziali">SB</span></div>
+</header>
+
+<main class="contenuto">
+  <div class="intestazione-pagina">
+    <h1>Team · Piattaforma E-commerce</h1>
+    <div class="azioni">
+      <div class="selettore-stato" role="group" aria-label="Stato del mockup">
+        <button type="button" data-modo="popolato" aria-pressed="true">Popolato</button>
+        <button type="button" data-modo="vuoto" aria-pressed="false">Vuoto</button>
+      </div>
+      <button class="pulsante primario" type="button">Aggiungi membro</button>
+    </div>
+  </div>
+
+  <section class="blocco" id="sezione-membri" style="margin-top:0">
+    <h2>Membri del team <small>5 membri · capacità complessiva 420%</small></h2>
+    <div class="griglia-membri" id="griglia-membri"></div>
+  </section>
+
+  <section class="blocco" id="sezione-assenze" aria-label="Assenze programmate">
+    <h2>Assenze programmate <small>RF-16</small></h2>
+    <table class="dati">
+      <thead>
+        <tr><th scope="col">Membro</th><th scope="col">Periodo</th><th scope="col">Motivo</th><th scope="col">Impatto</th></tr>
+      </thead>
+      <tbody id="corpo-assenze"></tbody>
+    </table>
+  </section>
+
+  <div class="vuoto" id="stato-vuoto" hidden>
+    <span class="icona" aria-hidden="true">👥</span>
+    <h2>Nessun membro nel team</h2>
+    <p>Aggiungi i membri del progetto per poterli assegnare alle attività e monitorare il carico.</p>
+    <button class="pulsante primario" type="button">Aggiungi il primo membro</button>
+  </div>
+
+  <p class="nota-mockup">Mockup di alta fedeltà — F01-ui-mockups (RF-28). Le azioni di aggiunta/rimozione sono rappresentazioni statiche; l'anagrafica e la capacità riflettono i dati dimostrativi.</p>
+</main>
+
+<script src="shared/data.js"></script>
+<script>
+const TINTE = ["#1F5F8B", "#2E7D4F", "#8A5A10", "#5A4B8A", "#B3382C"];
+
+function render() {
+  const vuoto = document.body.dataset.modo === "vuoto";
+  document.getElementById("sezione-membri").hidden = vuoto;
+  document.getElementById("sezione-assenze").hidden = vuoto;
+  document.getElementById("stato-vuoto").hidden = !vuoto;
+  if (vuoto) return;
+
+  const impieghi = { m1: 60, m2: 125, m3: 70, m4: 60, m5: 85 }; // % impegnata (m2 sovra-allocato)
+  document.getElementById("griglia-membri").innerHTML = MOCK.membri.map((m, i) => {
+    const impiego = impieghi[m.id];
+    const classe = impiego > m.capacita ? "eccesso" : impiego >= m.capacita * 0.9 ? "pieno" : "";
+    return `
+    <div class="scheda-membro">
+      <div class="avatar" style="background:${TINTE[i % TINTE.length]}">${m.nome.split(" ").map(s => s[0]).join("")}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <strong>${m.nome}</strong>
+          <span style="color:var(--inchiostro-secondario);font-size:13px">${m.ruolo}</span>
+        </div>
+        <div style="font-size:13px;color:var(--inchiostro-secondario);margin:2px 0 8px">${m.email}</div>
+        <div>${m.competenze.map(c => `<span class="tag-competenza">${c}</span>`).join("")}</div>
+        <div class="disponibilita">
+          <span>Disponibilità</span>
+          <div class="traccia"><div class="carico ${classe}" style="width:${Math.min(100, impiego)}%"></div></div>
+          <strong style="font-variant-numeric:tabular-nums">${impiego}%</strong><span>/ ${m.capacita}%</span>
+        </div>
+        ${m.assenze ? `<div style="margin-top:8px;font-size:12.5px;color:var(--inchiostro-secondario)">Assenze: ${m.assenze}</div>` : ""}
+      </div>
+    </div>`;
+  }).join("");
+
+  document.querySelector("#corpo-assenze").innerHTML = MOCK.membri
+    .filter(m => m.assenze)
+    .map(m => `<tr><td><strong>${m.nome}</strong></td><td class="data">${m.assenze}</td><td>Ferie / formazione</td><td>Riassegnazione automatica consigliata</td></tr>`)
+    .join("");
+}
+render();
+
+document.querySelectorAll(".selettore-stato button").forEach(b =>
+  b.addEventListener("click", () => {
+    document.body.dataset.modo = b.dataset.modo;
+    document.querySelectorAll(".selettore-stato button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    render();
+  })
+);
+</script>
+</body>
+</html>
