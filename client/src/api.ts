@@ -2,7 +2,15 @@
 flow: {phase: 5-implement, producer: agent/GLM-5.3-Flash (E2.3), consumer: componenti client, gate: gate_3_implementation}
 Client API: fetch con cookie di sessione (httpOnly) e gestione errori uniforme.
 */
-import type { Utente, Progetto, FiltriProgetti, ProgettoConAvanzamento, KpiProgetto } from "@ws/shared";
+import type {
+  Utente,
+  Progetto,
+  FiltriProgetti,
+  ProgettoConAvanzamento,
+  KpiProgetto,
+  Gantt,
+  Attivita,
+} from "@ws/shared";
 
 export class ErroreApi extends Error {
   constructor(
@@ -44,4 +52,11 @@ export const api = {
   creaProgetto: (corpo: unknown) =>
     chiama<{ progetto: Progetto }>("/progetti", { method: "POST", body: JSON.stringify(corpo) }),
   kpiProgetto: (idProgetto: number) => chiama<{ kpi: KpiProgetto }>(`/progetti/${idProgetto}/kpi`),
+  gantt: (idProgetto: number) => chiama<Gantt>(`/progetti/${idProgetto}/gantt`),
+  aggiornaAttivita: (id: number, patch: Record<string, unknown>) =>
+    chiama<{ attivita: Attivita }>(`/attivita/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
+  aggiungiDipendenza: (id: number, dependsOn: number) =>
+    chiama<{ dipendenza: unknown }>(`/attivita/${id}/dipendenze`, { method: "POST", body: JSON.stringify({ dependsOn }) }),
+  rimuoviDipendenza: (id: number, dependsOn: number) =>
+    chiama<{ ok: boolean }>(`/attivita/${id}/dipendenze/${dependsOn}`, { method: "DELETE" }),
 };

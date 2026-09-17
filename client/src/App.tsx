@@ -7,10 +7,27 @@ import { it, type Utente } from "@ws/shared";
 import { api } from "./api.js";
 import SchermataLogin from "./components/SchermataLogin.js";
 import Dashboard from "./components/Dashboard.js";
+import SchermataGantt from "./components/SchermataGantt.js";
+
+function paginaCorrente(): "progetti" | "gantt" {
+  return window.location.pathname === "/gantt" ? "gantt" : "progetti";
+}
 
 export default function App() {
   const [utente, setUtente] = useState<Utente | null>(null);
   const [verifica, setVerifica] = useState(true);
+  const [pagina, setPagina] = useState(paginaCorrente);
+
+  useEffect(() => {
+    const alPop = () => setPagina(paginaCorrente());
+    window.addEventListener("popstate", alPop);
+    return () => window.removeEventListener("popstate", alPop);
+  }, []);
+
+  function naviga(percorso: string) {
+    window.history.pushState({}, "", percorso);
+    setPagina(paginaCorrente());
+  }
 
   useEffect(() => {
     api
@@ -39,10 +56,10 @@ export default function App() {
           <strong>Web</strong>Supervisor
         </span>
         <nav className="navigazione" aria-label="Principale">
-          <a href="/" aria-current="page">
+          <a href="/" aria-current={pagina === "progetti" ? "page" : undefined} onClick={e => { e.preventDefault(); naviga("/"); }}>
             {it.nav.progetti}
           </a>
-          <a href="/gantt" title="Prevista in E4 — Gantt">
+          <a href="/gantt" aria-current={pagina === "gantt" ? "page" : undefined} onClick={e => { e.preventDefault(); naviga("/gantt"); }}>
             {it.nav.gantt}
           </a>
           <a href="/team" title="Prevista in E5 — Team">
@@ -62,9 +79,7 @@ export default function App() {
           </button>
         </div>
       </header>
-      <main className="contenuto">
-        <Dashboard utente={utente} />
-      </main>
+      <main className="contenuto">{pagina === "gantt" ? <SchermataGantt /> : <Dashboard utente={utente} />}</main>
     </>
   );
 }

@@ -62,6 +62,17 @@ export interface Dipendenza {
   dependsOn: number;
 }
 
+export interface AttivitaConCritica extends Attivita {
+  critica: boolean;
+}
+
+/** Contratto GET /progetti/:idProgetto/gantt (RF-08, AD-7). */
+export interface Gantt {
+  attivita: AttivitaConCritica[];
+  dipendenze: Dipendenza[];
+  cpm: { fineProgetto: number; critiche: number };
+}
+
 export interface KpiProgetto {
   completate: number;
   inCorso: number;

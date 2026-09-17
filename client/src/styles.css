@@ -247,3 +247,24 @@ table.dati .data { font-variant-numeric: tabular-nums; white-space: nowrap; colo
   .navigazione a { padding: 0 9px; font-size: 13px; }
   table.dati { display: block; overflow-x: auto; }
 }
+
+/* Gantt (F06) */
+.legenda-gantt { display: flex; gap: 1.5rem; margin-bottom: 0.75rem; font-size: 0.85rem; }
+.legenda-gantt .voce { display: inline-flex; align-items: center; gap: 0.4rem; }
+.campiona { display: inline-block; width: 18px; height: 10px; border-radius: 3px; }
+.campiona.critico { background: var(--pericolo, #d64545); }
+.campiona.normale { background: var(--accento, #2f6fed); }
+
+.contenitore-gantt { overflow-x: auto; border: 1px solid #e2e5ea; border-radius: 8px; background: #fff; }
+
+.bar-wrapper .bar.barra-critica { fill: #d64545; }
+.bar-wrapper .bar-progress.barra-critica { fill: #b73232; }
+.gantt .bar-label { font-size: 12px; }
+
+.campo-progetto { display: flex; align-items: center; gap: 0.5rem; font-weight: 500; }
+.campo-progetto select { padding: 0.4rem 0.6rem; border: 1px solid #cdd2da; border-radius: 6px; }
+
+.editor-dipendenze { margin-top: 1.25rem; }
+.editor-dipendenze h2 { margin-bottom: 0.5rem; }
+.riga-dipendenza { display: flex; align-items: center; gap: 0.75rem; padding: 0.35rem 0; }
+.riga-dipendenza select { padding: 0.4rem 0.6rem; border: 1px solid #cdd2da; border-radius: 6px; }

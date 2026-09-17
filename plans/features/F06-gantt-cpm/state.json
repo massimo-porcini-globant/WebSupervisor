@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F06-gantt-cpm",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/006-gantt-cpm",
+  "current_phase": 7,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:44:27Z",
+      "artifacts": [],
+      "required": "docs/F06-gantt-cpm/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:45:13Z",
+      "artifacts": [],
+      "required": [
+        "docs/F06-gantt-cpm/phase-3-plan/asd.md",
+        "plans/features/F06-gantt-cpm/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:57:26Z",
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:58:00Z",
+      "artifacts": [],
+      "required": [
+        "docs/F06-gantt-cpm/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-17T21:44:01Z"
+    }
+  ]
+}
