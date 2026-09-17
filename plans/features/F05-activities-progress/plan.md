@@ -25,14 +25,14 @@ F05-activities-progress — Epica E3 del backlog MVP (RF-04..07): CRUD attività
 ## 4. Progress & Status
 - [x] Gate 1: Specify (PRD) — PRD v0.1.0 (2026-09-17)
 - [x] Gate 2: Architecture & Tasks (ASD & Plan ratified) — ASD v1.0.0 (2026-09-17)
-- [ ] Gate 3: Implementation & Tests
+- [x] Gate 3: Implementation & Tests — 45/45 test, lint 0, typecheck 0, build OK (2026-09-17)
 - [ ] Gate 4: Verification & Release
 
 ### Task
-- [ ] E3.1 CRUD attività + dipendenze con validazione cicli
-- [ ] E3.2 Update stato da membro assegnato (RBAC) + test
-- [ ] E3.3 KPI riepilogo API + avanzamento in /progetti + test
-- [ ] E3.4 UI scadenze imminenti e avanzamento (conforme M1)
+- [x] E3.1 CRUD attività + dipendenze con validazione cicli
+- [x] E3.2 Update stato da membro assegnato (RBAC) + test
+- [x] E3.3 KPI riepilogo API + avanzamento in /progetti + test
+- [x] E3.4 UI scadenze imminenti e avanzamento (conforme M1)
 
 ### Work Log
 - **2026-09-17T21:29:16Z** — Initiative initialized by Massimo Porcini (Engineering).

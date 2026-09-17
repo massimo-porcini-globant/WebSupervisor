@@ -2,7 +2,7 @@
 flow: {phase: 5-implement, producer: agent/GLM-5.3-Flash (E2.3), consumer: componenti client, gate: gate_3_implementation}
 Client API: fetch con cookie di sessione (httpOnly) e gestione errori uniforme.
 */
-import type { Utente, Progetto, FiltriProgetti } from "@ws/shared";
+import type { Utente, Progetto, FiltriProgetti, ProgettoConAvanzamento, KpiProgetto } from "@ws/shared";
 
 export class ErroreApi extends Error {
   constructor(
@@ -37,10 +37,11 @@ export const api = {
       if (valore !== undefined && valore !== null) parametri.set(chiave, String(valore));
     }
     const query = parametri.toString();
-    return chiama<{ progetti: Progetto[]; totale: number; page: number; pageSize: number }>(
+    return chiama<{ progetti: ProgettoConAvanzamento[]; totale: number; page: number; pageSize: number }>(
       `/progetti${query ? `?${query}` : ""}`
     );
   },
   creaProgetto: (corpo: unknown) =>
     chiama<{ progetto: Progetto }>("/progetti", { method: "POST", body: JSON.stringify(corpo) }),
+  kpiProgetto: (idProgetto: number) => chiama<{ kpi: KpiProgetto }>(`/progetti/${idProgetto}/kpi`),
 };

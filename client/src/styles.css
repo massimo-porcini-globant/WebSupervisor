@@ -93,6 +93,15 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 .valore-nd { color: var(--inchiostro-secondario); }
 
+/* ---------- Barra avanzamento (M1) ---------- */
+.avanzamento { display: flex; align-items: center; gap: 10px; min-width: 170px; }
+.avanzamento .traccia { flex: 1; height: 8px; border-radius: 4px; background: #dde4e9; overflow: hidden; }
+.avanzamento .riempimento { height: 100%; background: var(--segnale); border-radius: 4px; }
+.avanzamento.tardivo .riempimento { background: var(--in-ritardo); }
+.avanzamento .valore { font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 600; min-width: 34px; text-align: right; }
+
+.scadenze-vuoto { color: var(--inchiostro-secondario); font-size: 13.5px; }
+
 /* ---------- Tabelle ---------- */
 table.dati { width: 100%; border-collapse: collapse; background: var(--carta-sollevata); border: 1px solid var(--linea); border-radius: var(--radius); overflow: hidden; }
 table.dati th {

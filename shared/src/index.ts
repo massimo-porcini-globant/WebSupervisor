@@ -5,4 +5,5 @@ Punto di ingresso del pacchetto condiviso (contratto API-first, ASD §6.2 AD-5).
 export * from "./types/index.js";
 export * from "./schemas/auth.js";
 export * from "./schemas/progetti.js";
+export * from "./schemas/attivita.js";
 export * from "./i18n/it.js";

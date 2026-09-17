@@ -6,6 +6,7 @@ import { and, asc, count, eq, type SQL } from "drizzle-orm";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { progettoCreateSchema, progettoPatchSchema, filtriProgettiSchema } from "@ws/shared";
 import { requireRole } from "../plugins/rbac.js";
+import { calcolaAvanzamentoProgetto, derivaStatoProgetto } from "../domain/avanzamento.js";
 import { schema, type Db } from "../data/db.js";
 
 export async function registraRouteProgetti(app: FastifyInstance, db: Db): Promise<void> {
@@ -27,7 +28,18 @@ export async function registraRouteProgetti(app: FastifyInstance, db: Db): Promi
       .limit(filtri.pageSize)
       .offset((filtri.page - 1) * filtri.pageSize);
 
-    return { progetti: righe, totale: totale?.valore ?? 0, page: filtri.page, pageSize: filtri.pageSize };
+    const oggi = new Date().toISOString().slice(0, 10);
+    const progetti = await Promise.all(
+      righe.map(async progetto => {
+        const attivita = await db.select().from(schema.tasks).where(eq(schema.tasks.projectId, progetto.id));
+        const avanzamento = calcolaAvanzamentoProgetto(
+          attivita.map(a => ({ stato: a.stato, stimaOre: a.stimaOre ?? null }))
+        );
+        return { ...progetto, avanzamento, suggerimentoStato: derivaStatoProgetto(progetto, avanzamento, oggi) };
+      })
+    );
+
+    return { progetti, totale: totale?.valore ?? 0, page: filtri.page, pageSize: filtri.pageSize };
   });
 
   app.post("/progetti", { preHandler: [requireRole(app, "amministratore", "project_manager")] }, async (request, reply) => {
