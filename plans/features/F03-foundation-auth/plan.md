@@ -35,7 +35,7 @@ Implementazione per storie in ordine E1.1 → E1.4; ogni storia con i propri tes
 - [x] Gate 1: Specify (PRD) — PASSED 2026-09-17
 - [ ] Gate 2: Architecture & Tasks (ASD iniziativa + piano ratificati)
 - [ ] Gate 3: Implementation & Tests (E1.1–E1.4)
-- [ ] Gate 4: Verification & Release
+- [x] Gate 4: Verification & Release — release-notes.md, smoke test OK (2026-09-17)
 
 ### Work Log
 
