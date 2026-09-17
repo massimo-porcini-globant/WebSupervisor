@@ -1,0 +1,9 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "0f1e2d3c-4b5a-4988-9a01-foundation-init",
+  "prev": null,
+  "entries": [
+    { "idx": 0, "version": "6", "when": 1758000000000, "tag": "0000_init", "breakpoints": true }
+  ]
+}
