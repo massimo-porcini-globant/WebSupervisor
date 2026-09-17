@@ -18,5 +18,6 @@ if (!segreto) {
 const { app } = await costruisceApp({ percorsoDb, segretoJwt: segreto, eseguiMigrations: true });
 
 const porta = Number(process.env.PORT ?? 3000);
-await app.listen({ port: porta, host: "127.0.0.1" });
-process.stdout.write(`WebSupervisor API in ascolto su http://127.0.0.1:${porta}/api/v1\n`);
+const host = process.env.HOST ?? "127.0.0.1";
+await app.listen({ port: porta, host });
+process.stdout.write(`WebSupervisor API in ascolto su http://${host}:${porta}/api/v1\n`);

@@ -31,7 +31,7 @@ export async function registraRouteAuth(app: FastifyInstance, db: Db): Promise<v
     reply.setCookie(COOKIE_JWT, token, {
       httpOnly: true,
       sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.COOKIE_SECURE === "true",
       path: "/",
       maxAge: 60 * 60 * 8,
     });

@@ -1,0 +1,12 @@
+node_modules
+client/dist
+server/data
+.git
+.claude
+.opencode
+docs
+plans
+input
+scripts
+*.md
+.github

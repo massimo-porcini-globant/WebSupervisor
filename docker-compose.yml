@@ -1,0 +1,32 @@
+# flow: {phase: 5-implement, producer: agent/GLM-5.3-Flash (dockerizzazione), consumer: ops, gate: gate_3_implementation}
+# WebSupervisor — API Fastify + SPA (nginx) + SQLite su volume.
+services:
+  server:
+    build: .
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?impostare JWT_SECRET in .env}
+      DB_PATH: /dati/app.db
+      HOST: 0.0.0.0
+      PORT: "3000"
+    volumes:
+      - dati:/dati
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+
+volumes:
+  dati:
