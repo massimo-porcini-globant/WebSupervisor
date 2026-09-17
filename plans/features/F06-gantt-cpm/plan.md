@@ -4,7 +4,7 @@
 initiative:
   id: F06-gantt-cpm
   type: feature
-  status: in_progress
+  status: completed
   owner: Massimo Porcini (Engineering)
   vendor: none
 flow: {phase: 3, producer: agent/GLM-5.3-Flash, consumer: team, gate: gate_2_architecture}
@@ -25,8 +25,8 @@ Initiative F06-gantt-cpm (feature) initialized.
 ## 4. Progress & Status
 - [x] Gate 1: Specify (PRD) - PRD v0.1.0 (2026-09-17)
 - [x] Gate 2: Architecture & Tasks (ASD & Plan ratified) - ASD v1.0.0 (2026-09-17)
-- [ ] Gate 3: Implementation & Tests
-- [ ] Gate 4: Verification & Release
+- [x] Gate 3: Implementation & Tests
+- [x] Gate 4: Verification & Release
 
 ### Task
 - [ ] E4.5 CPM dominio (forward/backward pass) + test esaustivi
