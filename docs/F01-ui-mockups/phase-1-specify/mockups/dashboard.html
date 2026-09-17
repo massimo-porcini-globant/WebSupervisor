@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!--
+flow: {phase: 5-implement, producer: frontend-design (T2), consumer: stakeholder validation (RF-30), gate: gate_3_implementation}
+M1 — Dashboard Progetti. Stati: vuota / popolata / a rischio / in ritardo (RF-29).
+-->
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M1 · Dashboard Progetti — WebSupervisor (mockup)</title>
+<link rel="stylesheet" href="shared/styles.css">
+</head>
+<body data-modo="popolato">
+
+<header class="testata">
+  <span class="marchio"><strong>Web</strong>Supervisor</span>
+  <nav class="navigazione" aria-label="Principale">
+    <a href="dashboard.html" aria-current="page">Progetti</a>
+    <a href="gantt.html">Gantt</a>
+    <a href="team.html">Team</a>
+    <a href="allocation.html">Risorse</a>
+  </nav>
+  <div class="utente"><span>Sara Bianchi</span><span class="iniziali">SB</span></div>
+</header>
+
+<main class="contenuto">
+  <div class="intestazione-pagina">
+    <h1>Progetti</h1>
+    <div class="filtri" id="filtri">
+      <span class="chip attiva">Tutti</span>
+      <span class="chip">In linea</span>
+      <span class="chip">A rischio</span>
+      <span class="chip">In ritardo</span>
+      <span class="chip">Priorità alta</span>
+    </div>
+    <div class="azioni">
+      <div class="selettore-stato" role="group" aria-label="Stato del mockup">
+        <button type="button" data-modo="popolato" aria-pressed="true">Popolato</button>
+        <button type="button" data-modo="vuoto" aria-pressed="false">Vuoto</button>
+      </div>
+      <button class="pulsante primario" type="button">Nuovo progetto</button>
+      <button class="pulsante" type="button" title="RF-22/24 — funzione reale prevista nello sviluppo">Esporta Excel</button>
+    </div>
+  </div>
+
+  <section class="blocco" id="sezione-kpi" aria-label="Riepilogo">
+    <div class="kpi">
+      <div class="voce"><div class="numero">4</div><div class="etichetta">Progetti attivi</div></div>
+      <div class="voce"><div class="numero">7</div><div class="etichetta">Attività completate</div></div>
+      <div class="voce"><div class="numero">3</div><div class="etichetta">In corso</div></div>
+      <div class="voce in-ritardo"><div class="numero">1</div><div class="etichetta">In ritardo</div></div>
+      <div class="voce a-rischio"><div class="numero">3</div><div class="etichetta">Scadenze entro 10 giorni</div></div>
+    </div>
+  </section>
+
+  <section class="blocco" id="sezione-progetti" aria-label="Elenco progetti">
+    <h2>Avanzamento progetti <small>calcolato da attività completate / totali (RF-05)</small></h2>
+    <table class="dati" id="tabella-progetti">
+      <thead>
+        <tr>
+          <th scope="col">Stato</th>
+          <th scope="col">Progetto</th>
+          <th scope="col">Team</th>
+          <th scope="col">Priorità</th>
+          <th scope="col">Avanzamento</th>
+          <th scope="col">Fine prevista</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section class="blocco" id="sezione-scadenze" aria-label="Scadenze imminenti">
+    <h2>Scadenze imminenti</h2>
+    <div id="elenco-scadenze"></div>
+  </section>
+
+  <div class="vuoto" id="stato-vuoto" hidden>
+    <span class="icona" aria-hidden="true">🗂</span>
+    <h2>Nessun progetto</h2>
+    <p>Crea il tuo primo progetto per iniziare a pianificare attività, team e scadenze.</p>
+    <button class="pulsante primario" type="button">Crea il primo progetto</button>
+  </div>
+
+  <p class="nota-mockup">Mockup di alta fedeltà — F01-ui-mockups (RF-28). Le funzioni di esportazione e creazione sono rappresentazioni statiche; l'avanzamento riflette i dati dimostrativi di <code>shared/data.js</code>.</p>
+</main>
+
+<script src="shared/data.js"></script>
+<script>
+const nomeStato = { "in-linea": "In linea", "a-rischio": "A rischio", "in-ritardo": "In ritardo" };
+const fmt = d => new Date(d).toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" });
+
+function render() {
+  const vuoto = document.body.dataset.modo === "vuoto";
+  document.getElementById("sezione-kpi").hidden = vuoto;
+  document.getElementById("sezione-progetti").hidden = vuoto;
+  document.getElementById("sezione-scadenze").hidden = vuoto;
+  document.getElementById("stato-vuoto").hidden = !vuoto;
+  if (vuoto) return;
+
+  document.querySelector("#tabella-progetti tbody").innerHTML = MOCK.progetti.map(p => `
+    <tr class="riga-${p.stato}">
+      <td><span class="punto-stato ${p.stato}"></span>${nomeStato[p.stato]}</td>
+      <td><strong>${p.nome}</strong></td>
+      <td>${p.team}</td>
+      <td><span class="badge priorita-${p.priorita}">${p.priorita}</span></td>
+      <td>
+        <div class="avanzamento ${p.stato === "in-ritardo" ? "tardivo" : ""}">
+          <div class="traccia"><div class="riempimento" style="width:${p.completamento}%"></div></div>
+          <span class="valore">${p.completamento}%</span>
+        </div>
+      </td>
+      <td class="data">${fmt(p.fine)}</td>
+    </tr>`).join("");
+
+  document.getElementById("elenco-scadenze").innerHTML = MOCK.scadenze.map(s => `
+    <div class="avviso ${s.stato}" style="margin-bottom:8px">
+      <strong>${fmt(s.data)}</strong>
+      <span><strong>${s.progetto}</strong> — ${s.attivita} (${nomeStato[s.stato]})</span>
+    </div>`).join("");
+}
+render();
+
+document.querySelectorAll(".selettore-stato button").forEach(b =>
+  b.addEventListener("click", () => {
+    document.body.dataset.modo = b.dataset.modo;
+    document.querySelectorAll(".selettore-stato button").forEach(x =>
+      x.setAttribute("aria-pressed", String(x === b)));
+    render();
+  })
+);
+</script>
+</body>
+</html>

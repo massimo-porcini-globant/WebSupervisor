@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--
+flow: {phase: 5-implement, producer: frontend-design (T3), consumer: stakeholder validation (RF-30), gate: gate_3_implementation}
+M2 — Diagramma di Gantt. Raggruppamento per fase (RF-12), critical path (RF-11), zoom (RF-13),
+dipendenze (RF-10), trascinamento rappresentato (RF-09 — interattività simulata).
+-->
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M2 · Gantt — WebSupervisor (mockup)</title>
+<link rel="stylesheet" href="shared/styles.css">
+<style>
+.linea-oggi { position: absolute; top: 44px; bottom: 0; width: 2px; background: var(--in-ritardo); z-index: 1; pointer-events: none; }
+.linea-oggi::before { content: "oggi"; position: absolute; top: -2px; left: 4px; font-size: 10px; color: var(--in-ritardo); font-weight: 700; }
+.overlay-dipendenze { position: absolute; pointer-events: none; z-index: 1; }
+.frecce { stroke: var(--inchiostro-secondario); stroke-width: 1.4; fill: none; }
+.testa-freccia { fill: var(--inchiostro-secondario); }
+.barra .maniglia { position: absolute; top: 2px; bottom: 2px; width: 5px; border-radius: 2px; background: rgba(255,255,255,.55); opacity: 0; }
+.barra .maniglia.sx { left: 2px; } .barra .maniglia.dx { right: 2px; }
+.barra:hover .maniglia { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="testata">
+  <span class="marchio"><strong>Web</strong>Supervisor</span>
+  <nav class="navigazione" aria-label="Principale">
+    <a href="dashboard.html">Progetti</a>
+    <a href="gantt.html" aria-current="page">Gantt</a>
+    <a href="team.html">Team</a>
+    <a href="allocation.html">Risorse</a>
+  </nav>
+  <div class="utente"><span>Sara Bianchi</span><span class="iniziali">SB</span></div>
+</header>
+
+<main class="contenuto">
+  <div class="intestazione-pagina">
+    <h1>Piattaforma E-commerce · diagramma attività</h1>
+    <div class="azioni">
+      <div class="selettore-stato" role="group" aria-label="Zoom temporale (RF-13)">
+        <button type="button" data-zoom="giorno" aria-pressed="false">Giorno</button>
+        <button type="button" data-zoom="settimana" aria-pressed="true">Settimana</button>
+        <button type="button" data-zoom="mese" aria-pressed="false">Mese</button>
+        <button type="button" data-zoom="trimestre" aria-pressed="false">Trimestre</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="avviso a-rischio" style="margin-bottom:18px">
+    <span>ℹ</span>
+    <span>Mockup: le barre si trascinano per rappresentare la modifica delle date (RF-09); nessuna modifica viene salvata.</span>
+  </div>
+
+  <div class="gantt-scorrimento">
+    <div class="gantt" id="gantt"></div>
+  </div>
+
+  <div class="legenda">
+    <span class="chave"><span class="esempio normale"></span> Attività</span>
+    <span class="chave"><span class="esempio critica"></span> Percorso critico</span>
+    <span class="chave"><span class="esempio milestone"></span> Milestone</span>
+    <span class="chave">Aggancio a gomito = dipendenza fine → inizio</span>
+  </div>
+
+  <p class="nota-mockup">Le fasi raggruppano le attività (etichetta di gruppo + barra di contorno tratteggiata). La linea rossa verticale indica la data odierna. Lo zoom cambia la scala px/giorno (28 · 14 · 7 · 3).</p>
+</main>
+
+<script src="shared/data.js"></script>
+<script>
+const PPD = { giorno: 28, settimana: 14, mese: 7, trimestre: 3 };
+let zoom = "settimana";
+const ETICH_W = 240;
+
+const dt = s => new Date(s + "T00:00:00");
+const giorni = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+const fmt = d => d.toLocaleDateString("it-IT", { day: "2-digit", month: "short" });
+
+const att = MOCK.attivita;
+const fInizio = Math.min(...att.map(t => +dt(t.inizio)));
+const fFine = Math.max(...att.map(t => +dt(t.fine)));
+const t0 = new Date(fInizio); t0.setDate(t0.getDate() - 3);
+const giorniTotali = Math.round((fFine - fInizio) / 86400000) + 16;
+const larghezzaPista = px => giorniTotali * px;
+
+const perFase = {};
+att.forEach(t => (perFase[t.fase] ??= []).push(t));
+
+function costruisci() {
+  const px = PPD[zoom];
+  const g = document.getElementById("gantt");
+  g.innerHTML = "";
+  const pistaW = larghezzaPista(px);
+
+  // intestazione mesi
+  const intest = document.createElement("div");
+  intest.className = "riga-intestazione";
+  intest.style.width = ETICH_W + pistaW + "px";
+  const mesi = {};
+  for (let i = 0; i < giorniTotali; i++) {
+    const d = new Date(t0); d.setDate(d.getDate() + i);
+    const chiave = d.toLocaleDateString("it-IT", { month: "long", year: "numeric" });
+    (chiave in mesi) ? mesi[chiave].fine = i : mesi[chiave] = { inizio: i, fine: i };
+  }
+  Object.entries(mesi).forEach(([nome, m]) => {
+    const el = document.createElement("div");
+    el.className = "intestazione-tempo mese";
+    el.style.left = ETICH_W + m.inizio * px + "px";
+    el.style.width = (m.fine - m.inizio + 1) * px + "px";
+    el.textContent = nome;
+    intest.appendChild(el);
+  });
+  g.appendChild(intest);
+
+  // righe: fase aggregata + attività
+  Object.entries(perFase).forEach(([fase, lista]) => {
+    const fIn = Math.min(...lista.map(t => +dt(t.inizio)));
+    const fFi = Math.max(...lista.map(t => +dt(t.fine)));
+    const rigaFase = document.createElement("div");
+    rigaFase.className = "riga riga-fase";
+    rigaFase.innerHTML = `<div class="etichetta-attivita" style="background:#F2F6F9">${fase}</div><div class="pista"></div>`;
+    g.appendChild(rigaFase);
+    lista.forEach(t => {
+      const riga = document.createElement("div");
+      riga.className = "riga";
+      riga.dataset.id = t.id;
+      riga.innerHTML = `<div class="etichetta-attivita"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.stato === "in-ritardo" ? '<span class="punto-stato in-ritardo"></span>' : ""}${t.nome}</span></div><div class="pista"></div>`;
+      g.appendChild(riga);
+    });
+  });
+
+  // barre attività + milestone
+  const righe = [...g.querySelectorAll(".riga")];
+  righe.forEach(r => r.querySelector(".pista").style.width = pistaW + "px");
+  att.forEach(t => {
+    const pista = righe.find(r => r.dataset.id === t.id).querySelector(".pista");
+    pista.style.position = "relative";
+    const off = Math.max(0, giorni(t0, t.inizio));
+    if (t.tipo === "milestone") {
+      const b = document.createElement("div");
+      b.className = "barra milestone";
+      b.style.left = off * px + "px";
+      b.title = t.nome + " — " + fmt(dt(t.inizio));
+      pista.appendChild(b);
+      return;
+    }
+    const dur = Math.max(1, giorni(t.inizio, t.fine) + 1);
+    const b = document.createElement("div");
+    b.className = "barra" + (t.critica ? " critica" : "");
+    b.style.left = off * px + "px";
+    b.style.width = Math.max(dur * px - 3, 10) + "px";
+    b.title = `${t.nome} — ${fmt(t.inizio)} → ${fmt(t.fine)} (trascina per spostare, demo)`;
+    const r = document.createElement("div");
+    r.className = "riempimento-avanzo";
+    r.style.width = ({ "completata": 100, "in-corso": 55, "in-ritardo": 40 }[t.stato] ?? 0) + "%";
+    b.appendChild(r);
+    const sx = Object.assign(document.createElement("span"), { className: "maniglia sx" });
+    const dx = Object.assign(document.createElement("span"), { className: "maniglia dx" });
+    b.append(sx, dx);
+    abilitaTrascinamento(b, px);
+    pista.appendChild(b);
+  });
+
+  // barre di fase (contorno tratteggiato) sulla riga di gruppo
+  Object.entries(perFase).forEach(([fase, lista]) => {
+    const rigaFase = righe.find(r => r.classList.contains("riga-fase") && r.textContent.trim().startsWith(fase));
+    if (!rigaFase) return;
+    const pista = rigaFase.querySelector(".pista");
+    pista.style.position = "relative";
+    pista.style.width = larghezzaPista(px) + "px";
+    const fIn = Math.min(...lista.map(t => giorni(t0, t.inizio)));
+    const fFi = Math.max(...lista.map(t => giorni(t0, t.fine)));
+    const b = document.createElement("div");
+    b.className = "barra fase";
+    b.style.left = Math.max(0, fIn) * px + "px";
+    b.style.width = (fFi - fIn + 1) * px - 3 + "px";
+    pista.appendChild(b);
+  });
+
+  // linea "oggi"
+  const linea = document.createElement("div");
+  linea.className = "linea-oggi";
+  linea.style.left = ETICH_W + Math.max(0, giorni(t0, MOCK.oggi)) * px + "px";
+  g.appendChild(linea);
+
+  // griglia verticale (settimanale, o giornaliera allo zoom giorno)
+  const svgGriglia = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svgGriglia.setAttribute("style", `position:absolute;left:${ETICH_W}px;top:44px;width:${pistaW}px;bottom:0;height:calc(100% - 44px);overflow:visible;`);
+  const passo = zoom === "giorno" ? 1 : 7;
+  for (let i = 0; i <= giorniTotali; i += passo) {
+    const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    l.setAttribute("x1", i * px); l.setAttribute("x2", i * px);
+    l.setAttribute("y1", 0); l.setAttribute("y2", "100%");
+    l.setAttribute("stroke", "#EAF0F3");
+    l.setAttribute("stroke-width", "1");
+    svgGriglia.appendChild(l);
+  }
+  g.appendChild(svgGriglia);
+
+  // dipendenze (frecce a gomito)
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "overlay-dipendenze");
+  svg.setAttribute("style", `position:absolute;left:${ETICH_W}px;top:44px;width:${pistaW}px;height:${g.scrollHeight}px;`);
+  att.forEach(t => {
+    (t.dipendenze || []).forEach(predId => {
+      const da = att.find(x => x.id === predId);
+      if (!da) return;
+      const rigaDa = righe.find(r => r.dataset.id === da.id);
+      const rigaA = righe.find(r => r.dataset.id === t.id);
+      if (!rigaDa || !rigaA) return;
+      const y1 = rigaDa.offsetTop + 17, y2 = rigaA.offsetTop + 17;
+      const x1 = Math.max(0, giorni(t0, da.fine)) * px + Math.max(giorni(da.inizio, da.fine) + 1, 1) * px - 3;
+      const x2 = Math.max(0, giorni(t0, t.inizio)) * px - 2;
+      const mx = (x1 + x2) / 2;
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", `M${x1},${y1} H${mx} V${y2} H${x2}`);
+      path.setAttribute("class", "frecce");
+      svg.appendChild(path);
+      const punta = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+      punta.setAttribute("points", `${x2},${y2} ${x2 - 5},${y2 - 3.5} ${x2 - 5},${y2 + 3.5}`);
+      punta.setAttribute("class", "testa-freccia");
+      svg.appendChild(punta);
+    });
+  });
+  g.appendChild(svg);
+}
+
+function abilitaTrascinamento(barra, px) {
+  barra.addEventListener("pointerdown", e => {
+    const startX = e.clientX, startLeft = parseFloat(barra.style.left);
+    barra.setPointerCapture(e.pointerId);
+    barra.style.transition = "none";
+    const muovi = ev => {
+      const nuovo = Math.max(0, Math.min(larghezzaPista(px) - barra.offsetWidth, startLeft + Math.round((ev.clientX - startX) / px) * px));
+      barra.style.left = nuovo + "px";
+    };
+    const rilascia = () => {
+      barra.removeEventListener("pointermove", muovi);
+      barra.removeEventListener("pointerup", rilascia);
+    };
+    barra.addEventListener("pointermove", muovi);
+    barra.addEventListener("pointerup", rilascia);
+  });
+}
+
+document.querySelectorAll(".selettore-stato button").forEach(b =>
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".selettore-stato button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    zoom = b.dataset.zoom;
+    costruisci();
+  })
+);
+
+costru();
+</script>
+</body>
+</html>

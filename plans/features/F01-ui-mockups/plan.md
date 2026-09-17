@@ -42,14 +42,22 @@ Produzione e validazione di 4 mockup ad alta fedeltà (Dashboard, Gantt, Team, A
 ## 5. Progress & Status
 
 - [x] Gate 1: Specify (PRD / Brief) — PASSED 2026-09-17
-- [ ] Gate 2: Architecture & Tasks (ASD & Plan ratified)
+- [x] Gate 2: Architecture & Tasks (ASD & Plan ratified) — PASSED 2026-09-17
 - [ ] Gate 3: Implementation & Tests (T1–T7)
+  - [x] T1 Design system + dati fittizi (`shared/styles.css`, `shared/data.js`)
+  - [x] T2 M1 Dashboard (`dashboard.html`)
+  - [x] T3 M2 Gantt (`gantt.html`) — fasi, dipendenze, critical path, zoom, drag rappresentato
+  - [x] T4 M3 Team (`team.html`)
+  - [x] T5 M4 Allocazione (`allocation.html`)
+  - [x] T6 Navigatore (`index.html`)
+  - [ ] T7 Verifica stati + browser (sintassi JS verificata; verifica visuale Playwright in attesa di approvazione installazione, altrimenti manuale su 4 browser)
 - [ ] Gate 4: Verification & Release (T7–T8, validazione stakeholder)
 
 ### Work Log
 
 - **2026-09-17T15:08:40Z** — Initiative initialized by Massimo Porcini (Engineering).
 - **2026-09-17** — Gate 1 passed (PRD ratified). ASD proporzionato redatto (decisione operator: deviazione proporzionalità documentata in asd.md). Branch re-bound a `agent/001-ui-mockups`.
+- **2026-09-17** — Gate 2 passed (ASD + piano). T1–T6: mockup costruiti con skill `frontend-design` (design system "salagioni", 4 schermate + navigatore, toggle stati popolato/vuoto). Verifica sintassi JS superata (node --check).
 
 ## 6. Revision Log
 

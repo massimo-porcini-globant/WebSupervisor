@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+flow: {phase: 5-implement, producer: frontend-design (T6), consumer: stakeholder validation (RF-30), gate: gate_3_implementation}
+Navigatore mockup F01-ui-mockups — entry point per la validazione stakeholder (RF-29, RF-30).
+-->
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WebSupervisor · Mockup UI (F01)</title>
+<link rel="stylesheet" href="shared/styles.css">
+</head>
+<body>
+
+<header class="testata">
+  <span class="marchio"><strong>Web</strong>Supervisor</span>
+  <div class="utente" style="margin-left:auto"><span>Mockup MVP · v0.1</span></div>
+</header>
+
+<div class="copertina-navigatore">
+  <h1 style="font-size:26px;font-weight:750">Mockup delle schermate principali</h1>
+  <p style="color:var(--inchiostro-secondario);margin-top:8px;max-width:60ch">Prototipi ad alta fedeltà delle quattro schermate principali di WebSupervisor, come richiesto dal requisito RF-28. I flussi riproducono le user story del documento dei requisiti v1.0; gli stati dell'interfaccia includono vuoto, popolato, in ritardo/a rischio e sovra-allocazione (RF-29).</p>
+
+  <div class="griglia-schermate">
+    <a class="carta-schermata" href="dashboard.html">
+      <h2>M1 · Dashboard Progetti</h2>
+      <p>Avanzamento di tutti i progetti, indicatori di stato e scadenze imminenti.</p>
+      <div class="stati">
+        <span class="badge in-linea">popolata</span>
+        <span class="badge a-rischio">scadenze imminenti</span>
+        <span class="badge in-ritardo">in ritardo</span>
+        <span class="badge priorita-bassa">vuota</span>
+      </div>
+    </a>
+    <a class="carta-schermata" href="gantt.html">
+      <h2>M2 · Diagramma di Gantt</h2>
+      <p>Fasi, dipendenze, percorso critico, zoom temporale e trascinamento delle date (rappresentato).</p>
+      <div class="stati">
+        <span class="badge in-linea">popolato</span>
+        <span class="badge a-rischio">critical path</span>
+        <span class="badge in-ritardo">in ritardo</span>
+      </div>
+    </a>
+    <a class="carta-schermata" href="team.html">
+      <h2>M3 · Gestione Team</h2>
+      <p>Anagrafica membri, competenze, capacità e assenze programmate.</p>
+      <div class="stati">
+        <span class="badge in-linea">popolato</span>
+        <span class="badge priorita-bassa">vuoto</span>
+      </div>
+    </a>
+    <a class="carta-schermata" href="allocation.html">
+      <h2>M4 · Allocazione Risorse</h2>
+      <p>Piano di allocazione settimanale, carico per persona e segnalazione sovra-allocazione.</p>
+      <div class="stati">
+        <span class="badge in-linea">popolato</span>
+        <span class="badge in-ritardo">sovra-allocazione</span>
+        <span class="badge priorita-bassa">vuoto</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="nota-mockup">
+    <strong>Per la validazione (RF-30):</strong> ogni schermata include un selettore «Popolato / Vuoto» per ispezionare gli stati dell'interfaccia. I pulsanti di esportazione e creazione sono segnaposto statici: la funzionalità sarà implementata nelle iniziative successive. I dati mostrati sono fittizi e seguono i scenari concordati nel PRD (§3).
+  </div>
+</div>
+
+</body>
+</html>
