@@ -4,7 +4,7 @@
 initiative:
   id: F01-ui-mockups
   type: feature
-  status: in_progress
+  status: completed
   owner: Massimo Porcini (Engineering)
   vendor: none
 flow: {phase: 3, producer: agent/GLM-5.3-Flash, consumer: phase-5-implement (mockup build), gate: gate_2_architecture}
@@ -50,14 +50,16 @@ Produzione e validazione di 4 mockup ad alta fedeltà (Dashboard, Gantt, Team, A
   - [x] T4 M3 Team (`team.html`)
   - [x] T5 M4 Allocazione (`allocation.html`)
   - [x] T6 Navigatore (`index.html`)
-  - [ ] T7 Verifica stati + browser (sintassi JS verificata; verifica visuale Playwright in attesa di approvazione installazione, altrimenti manuale su 4 browser)
-- [ ] Gate 4: Verification & Release (T7–T8, validazione stakeholder)
+  - [x] T7 Verifica stati + browser (test automatizzato `mockups.test.mjs` PASS; sintassi JS verificata; validazione manuale operatore su 4 schermate)
+  - [x] T8 Validazione stakeholder + iterazione feedback — approvati senza modifiche (RF-30)
+- [x] Gate 4: Verification & Release — PASSED 2026-09-17 (release-notes.md con evidenza GO)
 
 ### Work Log
 
 - **2026-09-17T15:08:40Z** — Initiative initialized by Massimo Porcini (Engineering).
 - **2026-09-17** — Gate 1 passed (PRD ratified). ASD proporzionato redatto (decisione operator: deviazione proporzionalità documentata in asd.md). Branch re-bound a `agent/001-ui-mockups`.
 - **2026-09-17** — Gate 2 passed (ASD + piano). T1–T6: mockup costruiti con skill `frontend-design` (design system "salagioni", 4 schermate + navigatore, toggle stati popolato/vuoto). Verifica sintassi JS superata (node --check).
+- **2026-09-17** — Gate 3 passed: test automatizzato mockups.test.mjs (stati RF-29, scenari ASD, design system, lingua). Gate 4 passed: validazione manuale operatore (approvazione 2026-09-17) + release-notes con esito GO. Iniziativa completata.
 
 ## 6. Revision Log
 
