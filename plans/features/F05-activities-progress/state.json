@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F05-activities-progress",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/005-activities-progress",
+  "current_phase": 5,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:29:38Z",
+      "artifacts": [],
+      "required": "docs/F05-activities-progress/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:30:44Z",
+      "artifacts": [],
+      "required": [
+        "docs/F05-activities-progress/phase-3-plan/asd.md",
+        "plans/features/F05-activities-progress/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "pending",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/F05-activities-progress/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-17T21:29:16Z"
+    }
+  ]
+}
