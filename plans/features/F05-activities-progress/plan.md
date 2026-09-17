@@ -4,7 +4,7 @@
 initiative:
   id: F05-activities-progress
   type: feature
-  status: in_progress
+  status: completed
   owner: Massimo Porcini (Engineering)
   vendor: none
 flow: {phase: 3, producer: agent/GLM-5.3-Flash, consumer: team, gate: gate_2_architecture}
@@ -26,7 +26,7 @@ F05-activities-progress — Epica E3 del backlog MVP (RF-04..07): CRUD attività
 - [x] Gate 1: Specify (PRD) — PRD v0.1.0 (2026-09-17)
 - [x] Gate 2: Architecture & Tasks (ASD & Plan ratified) — ASD v1.0.0 (2026-09-17)
 - [x] Gate 3: Implementation & Tests — 45/45 test, lint 0, typecheck 0, build OK (2026-09-17)
-- [ ] Gate 4: Verification & Release
+- [x] Gate 4: Verification & Release — release-notes.md, smoke E2E OK (2026-09-17)
 
 ### Task
 - [x] E3.1 CRUD attività + dipendenze con validazione cicli
