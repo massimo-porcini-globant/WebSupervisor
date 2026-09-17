@@ -1,4 +1,4 @@
-﻿# Initiative Plan: F03-foundation-auth
+# Initiative Plan: F03-foundation-auth
 
 ---
 initiative:
