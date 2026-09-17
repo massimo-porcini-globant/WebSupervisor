@@ -1,0 +1,19 @@
+# Local agent skills (junctions to user-level registries — must not be committed)
+.claude/skills/
+.opencode/skills/
+
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+
+# Logs & temp
+*.log
+.tmp/
