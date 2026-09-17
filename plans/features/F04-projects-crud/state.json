@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F04-projects-crud",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/004-projects-crud",
+  "current_phase": 7,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-17T20:50:47Z",
+      "artifacts": [],
+      "required": "docs/F04-projects-crud/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-17T20:51:48Z",
+      "artifacts": [],
+      "required": [
+        "docs/F04-projects-crud/phase-3-plan/asd.md",
+        "plans/features/F04-projects-crud/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:01:43Z",
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "passed",
+      "timestamp": "2026-09-17T21:27:54Z",
+      "artifacts": [],
+      "required": [
+        "docs/F04-projects-crud/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-17T20:49:46Z"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { creaDb, type Db } from "./data/db.js";
 import { registraAuth } from "./plugins/auth.js";
 import { registraRouteAuth } from "./routes/auth.js";
+import { registraRouteProgetti } from "./routes/progetti.js";
 
 export interface OpzioniApp {
   percorsoDb: string;
@@ -26,6 +27,7 @@ export async function costruisceApp(opzioni: OpzioniApp): Promise<{ app: Fastify
   await app.register(
     async istanza => {
       await registraRouteAuth(istanza, db);
+      await registraRouteProgetti(istanza, db);
     },
     { prefix: "/api/v1" }
   );
