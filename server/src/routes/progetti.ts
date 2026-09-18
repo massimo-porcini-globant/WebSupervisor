@@ -2,7 +2,7 @@
 flow: {phase: 5-implement, producer: agent/GLM-5.3-Flash (E2.1/E2.2), consumer: app.ts, gate: gate_3_implementation}
 CRUD progetti (RF-01..03): validazione Zod shared (AD-5), RBAC scrittura (amm+PM), filtri e paginazione, archiviazione logica.
 */
-import { and, asc, count, eq, type SQL } from "drizzle-orm";
+import { and, asc, count, eq, inArray, or, type SQL } from "drizzle-orm";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { progettoCreateSchema, progettoPatchSchema, filtriProgettiSchema } from "@ws/shared";
 import { requireRole } from "../plugins/rbac.js";
@@ -74,6 +74,29 @@ export async function registraRouteProgetti(app: FastifyInstance, db: Db): Promi
 
   app.post("/progetti/:id/ripristina", { preHandler: [requireRole(app, "amministratore", "project_manager")] }, async (request, reply) => {
     return cambiaArchiviazione(db, request, reply, false);
+  });
+
+  // F12 (AD-29): rimozione definitiva con cascata in transazione (assegnazioni, dipendenze, attività).
+  app.delete("/progetti/:id", { preHandler: [requireRole(app, "amministratore", "project_manager")] }, async (request, reply) => {
+    const id = leggiId(request);
+    if (id === null) return reply.code(400).send({ errore: "Id non valido" });
+    const [progetto] = await db.select().from(schema.projects).where(eq(schema.projects.id, id));
+    if (!progetto) return reply.code(404).send({ errore: "Progetto non trovato" });
+
+    const client = db.$client as { transaction: (fn: () => void) => () => void };
+    client.transaction(() => {
+      const attivita = db.select({ id: schema.tasks.id }).from(schema.tasks).where(eq(schema.tasks.projectId, id)).all();
+      const ids = attivita.map(a => a.id);
+      if (ids.length > 0) {
+        db.delete(schema.assignments).where(inArray(schema.assignments.taskId, ids)).run();
+        db.delete(schema.taskDependencies)
+          .where(or(inArray(schema.taskDependencies.taskId, ids), inArray(schema.taskDependencies.dependsOn, ids)))
+          .run();
+        db.delete(schema.tasks).where(inArray(schema.tasks.id, ids)).run();
+      }
+      db.delete(schema.projects).where(eq(schema.projects.id, id)).run();
+    })();
+    return { ok: true };
   });
 }
 
