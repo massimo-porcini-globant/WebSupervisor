@@ -9,7 +9,7 @@
     "role": "Engineering"
   },
   "branch": "agent/007-team-anagrafica",
-  "current_phase": 6,
+  "current_phase": 7,
   "status": "in_progress",
   "gates": {
     "gate_1_specify": {
@@ -36,8 +36,8 @@
       ]
     },
     "gate_4_release": {
-      "status": "pending",
-      "timestamp": null,
+      "status": "passed",
+      "timestamp": "2026-09-18T07:11:08Z",
       "artifacts": [],
       "required": [
         "docs/F07-team-anagrafica/phase-6-verify/release-notes.md"
