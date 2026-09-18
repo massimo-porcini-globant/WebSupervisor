@@ -1,0 +1,51 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F11-fix-avanzamento-ore",
+  "tier": "fix",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/011-fix-avanzamento-ore",
+  "current_phase": 7,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-18T09:12:05Z",
+      "artifacts": [],
+      "required": null
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-18T09:12:06Z",
+      "artifacts": [],
+      "required": "plans/fixes/F11-fix-avanzamento-ore/plan.md"
+    },
+    "gate_3_implementation": {
+      "status": "passed",
+      "timestamp": "2026-09-18T09:14:51Z",
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "passed",
+      "timestamp": "2026-09-18T09:15:18Z",
+      "artifacts": [],
+      "required": [
+        "docs/F11-fix-avanzamento-ore/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-18T09:11:25Z"
+    }
+  ]
+}

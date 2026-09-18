@@ -44,6 +44,46 @@ describe("calcolaAvanzamentoProgetto (E2.4)", () => {
   });
 });
 
+describe("calcolaAvanzamentoProgetto con ore lavorate (F11)", () => {
+  it("ore parziali pesano sul contributo dell'attività", () => {
+    const r = calcolaAvanzamentoProgetto([
+      { stato: "in-corso", stimaOre: 10, lavorateOre: 5 },
+      { stato: "da-iniziare", stimaOre: 10 },
+    ]);
+    expect(r).toBe(25); // 5/20
+  });
+
+  it("ore oltre la stima sono clampate alla stima", () => {
+    const r = calcolaAvanzamentoProgetto([
+      { stato: "in-corso", stimaOre: 4, lavorateOre: 9 },
+    ]);
+    expect(r).toBe(100);
+  });
+
+  it("ore negative sono clampate a zero", () => {
+    const r = calcolaAvanzamentoProgetto([
+      { stato: "in-corso", stimaOre: 4, lavorateOre: -2 },
+    ]);
+    expect(r).toBe(0);
+  });
+
+  it("attività completata vale pieno peso anche con poche ore lavorate", () => {
+    const r = calcolaAvanzamentoProgetto([
+      { stato: "completata", stimaOre: 10, lavorateOre: 2 },
+      { stato: "da-iniziare", stimaOre: 10 },
+    ]);
+    expect(r).toBe(50);
+  });
+
+  it("senza ore lavorate il comportamento resta quello stato-based", () => {
+    const r = calcolaAvanzamentoProgetto([
+      { stato: "completata", stimaOre: 8 },
+      { stato: "da-iniziare", stimaOre: 4 },
+    ]);
+    expect(r).toBe(67);
+  });
+});
+
 describe("derivaStatoProgetto", () => {
   const progetto = { inizio: "2026-09-01", fine: "2026-09-30" };
 

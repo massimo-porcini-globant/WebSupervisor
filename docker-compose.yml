@@ -9,6 +9,8 @@ services:
       DB_PATH: /dati/app.db
       HOST: 0.0.0.0
       PORT: "3000"
+    ports:
+      - "8081:3000" # API diretta per test (export Excel, endpoint REST)
     volumes:
       - dati:/dati
     healthcheck:
