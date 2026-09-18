@@ -85,7 +85,9 @@ describe("gantt (E4.1)", () => {
     const corpo = res.json();
     expect(corpo.attivita).toHaveLength(3);
     expect(corpo.dipendenze).toHaveLength(2);
-    const perNome = new Map(corpo.attivita.map((a: { nome: string } & Record<string, unknown>) => [a.nome, a]));
+    const perNome = new Map<string, { critica: boolean }>(
+      (corpo.attivita as { nome: string; critica: boolean }[]).map(a => [a.nome, a])
+    );
     expect(perNome.get("A")!.critica).toBe(true);
     expect(perNome.get("B")!.critica).toBe(true);
     expect(perNome.get("C")!.critica).toBe(false);

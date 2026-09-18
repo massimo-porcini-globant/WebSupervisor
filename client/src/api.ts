@@ -13,6 +13,9 @@ import type {
   TeamConMembri,
   Membro,
   Assenza,
+  RigaPiano,
+  AvvisoSovra,
+  Assegnazione,
 } from "@ws/shared";
 
 export class ErroreApi extends Error {
@@ -81,4 +84,14 @@ export const api = {
   aggiornaAttivitaEsistente: (id: number, patch: Record<string, unknown>) =>
     chiama<{ attivita: Attivita }>(`/attivita/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
   rimuoviAttivita: (id: number) => chiama<{ ok: boolean }>(`/attivita/${id}`, { method: "DELETE" }),
+  allocazioneProgetto: (idProgetto: number) =>
+    chiama<{ righe: RigaPiano[]; avvisi: AvvisoSovra[] }>(`/progetti/${idProgetto}/allocazione`),
+  carico: (dal: string, al: string, teamId?: number) => {
+    const parametri = new URLSearchParams({ dal, al });
+    if (teamId !== undefined) parametri.set("teamId", String(teamId));
+    return chiama<{ righe: RigaPiano[]; avvisi: AvvisoSovra[] }>(`/allocazione/carico?${parametri.toString()}`);
+  },
+  creaAssegnazione: (idAttivita: number, corpo: Record<string, unknown>) =>
+    chiama<{ assegnazione: Assegnazione }>(`/attivita/${idAttivita}/assegnazioni`, { method: "POST", body: JSON.stringify(corpo) }),
+  rimuoviAssegnazione: (id: number) => chiama<{ ok: boolean }>(`/assegnazioni/${id}`, { method: "DELETE" }),
 };

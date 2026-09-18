@@ -54,6 +54,7 @@ export interface Membro {
   competenze: string | null;
   capacitaPunti: number;
   teamId: number | null;
+  userId: number | null;
 }
 
 export interface Assenza {

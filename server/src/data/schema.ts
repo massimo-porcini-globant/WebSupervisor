@@ -28,8 +28,9 @@ export const members = sqliteTable(
     competenze: text("competenze"),
     capacitaPunti: integer("capacita_punti").notNull().default(100),
     teamId: integer("team_id").references(() => teams.id),
+    userId: integer("user_id").references(() => users.id),
   },
-  t => [index("members_team_idx").on(t.teamId)]
+  t => [index("members_team_idx").on(t.teamId), index("members_user_idx").on(t.userId)]
 );
 
 export const memberAbsences = sqliteTable(

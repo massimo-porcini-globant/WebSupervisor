@@ -9,10 +9,12 @@ import SchermataLogin from "./components/SchermataLogin.js";
 import Dashboard from "./components/Dashboard.js";
 import SchermataGantt from "./components/SchermataGantt.js";
 import SchermataTeam from "./components/SchermataTeam.js";
+import SchermataRisorse from "./components/SchermataRisorse.js";
 
-function paginaCorrente(): "progetti" | "gantt" | "team" {
+function paginaCorrente(): "progetti" | "gantt" | "team" | "risorse" {
   if (window.location.pathname === "/gantt") return "gantt";
   if (window.location.pathname === "/team") return "team";
+  if (window.location.pathname === "/risorse") return "risorse";
   return "progetti";
 }
 
@@ -68,7 +70,7 @@ export default function App() {
           <a href="/team" aria-current={pagina === "team" ? "page" : undefined} onClick={e => { e.preventDefault(); naviga("/team"); }}>
             {it.nav.team}
           </a>
-          <a href="/risorse" title="Prevista in E6 — Allocazione">
+          <a href="/risorse" aria-current={pagina === "risorse" ? "page" : undefined} onClick={e => { e.preventDefault(); naviga("/risorse"); }}>
             {it.nav.risorse}
           </a>
         </nav>
@@ -83,7 +85,7 @@ export default function App() {
         </div>
       </header>
       <main className="contenuto">
-        {pagina === "gantt" ? <SchermataGantt /> : pagina === "team" ? <SchermataTeam utente={utente} /> : <Dashboard utente={utente} />}
+        {pagina === "gantt" ? <SchermataGantt /> : pagina === "team" ? <SchermataTeam utente={utente} /> : pagina === "risorse" ? <SchermataRisorse /> : <Dashboard utente={utente} />}
       </main>
     </>
   );

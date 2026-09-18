@@ -149,10 +149,9 @@ async function elencoDipendenze(db: Db, taskIds: number[]) {
 }
 
 async function membroAssegnato(db: Db, taskId: number, userId: number): Promise<boolean> {
-  // Il membro è "assegnato" se esiste almeno una assegnazione su attività del progetto
-  // collegate allo stesso utente: si mappa l'utente sul member con stesso username non è
-  // automatico (entità separate). Per l'MVP: assegnazione legata via memberId = userId
-  // è falsata; si usa la corrispondenza users.username = members.nome.
+  // Il membro è "assegnato" se esiste almeno una assegnazione sull'attività collegata
+  // all'utente via FK members.user_id (AD-17). Fallback legacy (F05 ASD §5) per membri
+  // non ancora collegati: corrispondenza users.username === members.nome.
   const [utente] = await db.select().from(schema.users).where(eq(schema.users.id, userId));
   if (!utente) return false;
   const [attivita] = await db.select().from(schema.tasks).where(eq(schema.tasks.id, taskId));
@@ -161,5 +160,5 @@ async function membroAssegnato(db: Db, taskId: number, userId: number): Promise<
   if (assegnazioni.length === 0) return false;
   const memberIds = assegnazioni.map(a => a.memberId);
   const membri = await db.select().from(schema.members).where(inArray(schema.members.id, memberIds));
-  return membri.some(m => m.nome === utente.username);
+  return membri.some(m => m.userId === userId || (m.userId === null && m.nome === utente.username));
 }

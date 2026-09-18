@@ -5,6 +5,7 @@
   "prev": null,
   "entries": [
     { "idx": 0, "version": "6", "when": 1758000000000, "tag": "0000_init", "breakpoints": true },
-    { "idx": 1, "version": "6", "when": 1758100000000, "tag": "0001_team_assenze", "breakpoints": true }
+    { "idx": 1, "version": "6", "when": 1758100000000, "tag": "0001_team_assenze", "breakpoints": true },
+    { "idx": 2, "version": "6", "when": 1758200000000, "tag": "0002_allocazione", "breakpoints": true }
   ]
 }
