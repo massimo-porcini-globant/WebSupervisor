@@ -67,6 +67,9 @@ export default function PannelloAttivita({
             {it.attivita.titolo} — {progetto.nome}
           </h1>
           <div className="azioni">
+            <a className="pulsante" href={`/api/v1/export/progetti/${progetto.id}/attivita.xlsx`} download>
+              {it.export.esportaExcel}
+            </a>
             {puoScrivere && (
               <button className="pulsante primario" type="button" onClick={() => { setInEditing(null); setFormAperto(true); }}>
                 {it.attivita.nuova}

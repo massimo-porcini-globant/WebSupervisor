@@ -5,6 +5,7 @@ Dizionario UI italiano (RNF-08). Le chiavi sono stabili; i testi sono i contenut
 export const it = {
   app: { nome: "WebSupervisor" },
   nav: { progetti: "Progetti", gantt: "Gantt", team: "Team", risorse: "Risorse" },
+  export: { esportaExcel: "Esporta Excel" },
   auth: {
     login: "Accedi",
     logout: "Esci",

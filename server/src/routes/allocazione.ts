@@ -109,7 +109,7 @@ export async function registraRouteAllocazione(app: FastifyInstance, db: Db): Pr
   });
 }
 
-async function costruisceRighe(
+export async function costruisceRighe(
   db: Db,
   assegnazioni: { id: number; taskId: number; memberId: number; percento: number; dal: string; al: string }[],
   attivita: { id: number; nome: string; projectId: number }[],

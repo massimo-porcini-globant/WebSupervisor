@@ -100,6 +100,9 @@ export default function SchermataRisorse() {
           </button>
         </div>
         <div className="azioni">
+          <a className="pulsante" href={`/api/v1/export/allocazione.xlsx?dal=${dal}&al=${al}`} download>
+            {it.export.esportaExcel}
+          </a>
           {attivita.length > 0 && membri.length > 0 && (
             <button className="pulsante primario" type="button" onClick={() => setFormAperto(true)}>
               {it.risorse.nuovaAssegnazione}
