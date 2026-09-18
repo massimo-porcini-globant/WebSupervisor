@@ -74,4 +74,11 @@ export const api = {
   creaAssenza: (idMembro: number, corpo: Record<string, unknown>) =>
     chiama<{ assenza: Assenza }>(`/membri/${idMembro}/assenze`, { method: "POST", body: JSON.stringify(corpo) }),
   rimuoviAssenza: (id: number) => chiama<{ ok: boolean }>(`/assenze/${id}`, { method: "DELETE" }),
+  attivita: (idProgetto: number) =>
+    chiama<{ attivita: Attivita[]; dipendenze: unknown[] }>(`/progetti/${idProgetto}/attivita`),
+  creaAttivita: (idProgetto: number, corpo: Record<string, unknown>) =>
+    chiama<{ attivita: Attivita }>(`/progetti/${idProgetto}/attivita`, { method: "POST", body: JSON.stringify(corpo) }),
+  aggiornaAttivitaEsistente: (id: number, patch: Record<string, unknown>) =>
+    chiama<{ attivita: Attivita }>(`/attivita/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
+  rimuoviAttivita: (id: number) => chiama<{ ok: boolean }>(`/attivita/${id}`, { method: "DELETE" }),
 };

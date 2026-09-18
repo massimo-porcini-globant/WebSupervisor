@@ -163,7 +163,17 @@ export default function SchermataGantt() {
       {!inCaricamento && selezionato && dati && dati.attivita.length === 0 && (
         <div className="vuoto" aria-live="polite">
           <h2>{it.gantt.titolo}</h2>
-          <p>{it.gantt.nessunaAttivita}</p>
+          <p>{it.attivita.nessunaGantt}</p>
+          <button
+            className="pulsante primario"
+            type="button"
+            onClick={() => {
+              window.history.pushState({}, "", "/");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
+          >
+            {it.attivita.vaiProgetti}
+          </button>
         </div>
       )}
 

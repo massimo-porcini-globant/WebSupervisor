@@ -5,6 +5,7 @@ Dashboard Progetti conforme M1 (F01): KPI strip, filtri a chip, tabella avanzame
 import { useCallback, useEffect, useState } from "react";
 import { it, type ProgettoConAvanzamento, type Utente } from "@ws/shared";
 import { api, ErroreApi } from "../api.js";
+import PannelloAttivita from "./PannelloAttivita.js";
 
 type FiltroStato = "tutti" | "in-linea" | "a-rischio" | "in-ritardo";
 
@@ -22,6 +23,7 @@ export default function Dashboard({ utente }: { utente: Utente }) {
   const [soloAltaPriorita, setSoloAltaPriorita] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
   const [formAperto, setFormAperto] = useState(false);
+  const [progettoAttivita, setProgettoAttivita] = useState<ProgettoConAvanzamento | null>(null);
 
   const puoScrivere = utente.ruolo === "amministratore" || utente.ruolo === "project_manager";
 
@@ -138,7 +140,10 @@ export default function Dashboard({ utente }: { utente: Utente }) {
                     <span className={`punto-stato ${p.stato}`} /> {nomiStato[p.stato]}
                   </td>
                   <td>
-                    <strong>{p.nome}</strong>
+                    <strong>{p.nome}</strong>{" "}
+                    <button className="pulsante pulsante-chiaro" type="button" onClick={() => setProgettoAttivita(p)}>
+                      {it.attivita.titolo}
+                    </button>
                   </td>
                   <td>{p.teamId ?? "—"}</td>
                   <td>
@@ -194,6 +199,9 @@ export default function Dashboard({ utente }: { utente: Utente }) {
       )}
 
       {formAperto && <ModuloNuovoProgetto chiuso={() => setFormAperto(false)} creato={() => { setFormAperto(false); void carica(); }} />}
+      {progettoAttivita && (
+        <PannelloAttivita progetto={progettoAttivita} utente={utente} chiuso={() => { setProgettoAttivita(null); void carica(); }} />
+      )}
     </>
   );
 }
