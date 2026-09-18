@@ -43,18 +43,20 @@ if (teamDemo) {
     .insert(schema.projects)
     .values({ nome: "Progetto Demo", priorita: "media", inizio: "2026-09-01", fine: "2026-12-31", teamId: teamDemo.id })
     .returning();
-  const [attivitaDemo] = await db
-    .insert(schema.tasks)
-    .values([
-      { projectId: progettoDemo.id, nome: "Sviluppo front-end", inizio: "2026-09-14", fine: "2026-09-18", fase: "Analisi" },
-      { projectId: progettoDemo.id, nome: "App Prenotazioni", inizio: "2026-09-14", fine: "2026-09-18", fase: "Sviluppo" },
-    ])
-    .returning();
-  if (membroDemo && attivitaDemo.length === 2) {
-    await db.insert(schema.assignments).values([
-      { taskId: attivitaDemo[0]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
-      { taskId: attivitaDemo[1]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
-    ]);
+  if (progettoDemo && membroDemo) {
+    const attivitaDemo = await db
+      .insert(schema.tasks)
+      .values([
+        { projectId: progettoDemo.id, nome: "Sviluppo front-end", inizio: "2026-09-14", fine: "2026-09-18", fase: "Analisi" },
+        { projectId: progettoDemo.id, nome: "App Prenotazioni", inizio: "2026-09-14", fine: "2026-09-18", fase: "Sviluppo" },
+      ])
+      .returning();
+    if (attivitaDemo.length === 2) {
+      await db.insert(schema.assignments).values([
+        { taskId: attivitaDemo[0]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
+        { taskId: attivitaDemo[1]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
+      ]);
+    }
   }
 }
 
