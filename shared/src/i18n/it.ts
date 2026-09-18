@@ -118,6 +118,28 @@ export const it = {
     erroreDati: "Dati non validi: controlla i campi",
     erroreSovrapposta: "Il periodo si sovrappone a un'assenza già registrata",
   },
+  attivita: {
+    titolo: "Attività",
+    nuova: "Nuova attività",
+    modifica: "Modifica",
+    rimuovi: "Rimuovi",
+    confermaRimozione: "Rimuovere l'attività?",
+    nome: "Nome",
+    fase: "Fase",
+    inizio: "Inizio",
+    fine: "Fine",
+    stato: "Stato",
+    stimaOre: "Stima ore",
+    lavorateOre: "Ore lavorate",
+    formTitolo: "Attività",
+    erroreCaricamento: "Errore nel caricamento delle attività",
+    erroreDati: "Dati non validi: controlla i campi",
+    nomeStato: { "da-iniziare": "Da iniziare", "in-corso": "In corso", completata: "Completata", "in-ritardo": "In ritardo" },
+    nessuna: "Nessuna attività: creane una per pianificare il progetto.",
+    apriGantt: "Apri Gantt",
+    vaiProgetti: "Vai ai Progetti",
+    nessunaGantt: "Nessuna attività: creane una dalla pagina Progetti per popolare il diagramma.",
+  },
 } as const;
 
 export type Dizionario = typeof it;
