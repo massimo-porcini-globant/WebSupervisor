@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F10-export-excel",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/010-export-excel",
+  "current_phase": 5,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-18T08:28:53Z",
+      "artifacts": [],
+      "required": "docs/F10-export-excel/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-18T08:29:21Z",
+      "artifacts": [],
+      "required": [
+        "docs/F10-export-excel/phase-3-plan/asd.md",
+        "plans/features/F10-export-excel/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "pending",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/F10-export-excel/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-18T08:28:18Z"
+    }
+  ]
+}
