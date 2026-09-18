@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F08-attivita-ui",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/008-attivita-ui",
+  "current_phase": 5,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:32:01Z",
+      "artifacts": [],
+      "required": "docs/F08-attivita-ui/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:32:48Z",
+      "artifacts": [],
+      "required": [
+        "docs/F08-attivita-ui/phase-3-plan/asd.md",
+        "plans/features/F08-attivita-ui/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "pending",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/F08-attivita-ui/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-18T07:31:32Z"
+    }
+  ]
+}
