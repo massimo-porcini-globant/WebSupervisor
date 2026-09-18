@@ -33,7 +33,7 @@ export async function registraRouteProgetti(app: FastifyInstance, db: Db): Promi
       righe.map(async progetto => {
         const attivita = await db.select().from(schema.tasks).where(eq(schema.tasks.projectId, progetto.id));
         const avanzamento = calcolaAvanzamentoProgetto(
-          attivita.map(a => ({ stato: a.stato, stimaOre: a.stimaOre ?? null }))
+          attivita.map(a => ({ stato: a.stato, stimaOre: a.stimaOre ?? null, lavorateOre: a.lavorateOre ?? null }))
         );
         return { ...progetto, avanzamento, suggerimentoStato: derivaStatoProgetto(progetto, avanzamento, oggi) };
       })

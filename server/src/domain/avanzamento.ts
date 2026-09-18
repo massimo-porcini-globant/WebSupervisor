@@ -9,6 +9,7 @@ export type StatoProgetto = "in-linea" | "a-rischio" | "in-ritardo";
 export interface AttivitaPerAvanzamento {
   stato: StatoTask;
   stimaOre: number | null;
+  lavorateOre?: number | null;
 }
 
 const GIORNO_MS = 86_400_000;
@@ -17,17 +18,25 @@ function ms(data: string): number {
   return new Date(data + "T00:00:00Z").getTime();
 }
 
-/** % avanzamento pesato (stima_ore se presente e > 0, altrimenti peso 1). null se nessuna attività. */
-export function calcolaAvanzamentoProgetto(attivita: { stato: StatoTask; stimaOre: number | null }[]): number | null {
+/**
+ * % avanzamento pesato (stima_ore se presente e > 0, altrimenti peso 1). null se nessuna attività.
+ * F11 (AD-28): per attività con stima ore, il contributo incorpora le ore lavorate
+ * (clamp 0..stima) quando non completate; completata = pieno peso. Senza stima ore, solo lo stato.
+ */
+export function calcolaAvanzamentoProgetto(attivita: AttivitaPerAvanzamento[]): number | null {
   let pesoTotale = 0;
-  let pesoCompletato = 0;
+  let pesoAvanzato = 0;
   for (const a of attivita) {
     const peso = a.stimaOre !== null && a.stimaOre > 0 ? a.stimaOre : 1;
     pesoTotale += peso;
-    if (a.stato === "completata") pesoCompletato += peso;
+    if (a.stato === "completata") {
+      pesoAvanzato += peso;
+    } else if (a.stimaOre !== null && a.stimaOre > 0 && typeof a.lavorateOre === "number") {
+      pesoAvanzato += Math.max(0, Math.min(a.lavorateOre, a.stimaOre));
+    }
   }
   if (pesoTotale === 0) return null;
-  return Math.round((pesoCompletato / pesoTotale) * 100);
+  return Math.round((pesoAvanzato / pesoTotale) * 100);
 }
 
 /**

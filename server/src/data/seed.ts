@@ -30,34 +30,60 @@ const inseriti = await db
   .onConflictDoNothing()
   .returning();
 
-// E9.2 (AD-17): team + membro demo collegato via FK user_id, con assegnazioni demo per
-// esercitare piano/sovra-allocazione/carico (RF-18..21). Idempotente.
-const [teamDemo] = await db.insert(schema.teams).values({ nome: "Demo" }).onConflictDoNothing().returning();
-if (teamDemo) {
-  const [utenteMembro] = await db.select().from(schema.users).where(eq(schema.users.username, "membro"));
-  const [membroDemo] = await db
+// E9.2 (AD-17) + update test: dati demo idempotenti a ogni elemento, così esistono sia su
+// volumi nuovi sia su volumi preesistenti (esercitano piano/sovra-allocazione/carico, RF-18..23).
+const [teamTrovato] = await db.select().from(schema.teams).where(eq(schema.teams.nome, "Demo"));
+const teamDemo =
+  teamTrovato ??
+  (await db.insert(schema.teams).values({ nome: "Demo" }).onConflictDoNothing().returning())[0] ??
+  (await db.select().from(schema.teams).where(eq(schema.teams.nome, "Demo")))[0];
+
+const [utenteMembro] = await db.select().from(schema.users).where(eq(schema.users.username, "membro"));
+
+const [membroTrovato] = await db
+  .select()
+  .from(schema.members)
+  .where(eq(schema.members.teamId, teamDemo!.id));
+const membroDemo =
+  membroTrovato ??
+  (await db
     .insert(schema.members)
-    .values({ nome: "membro", ruolo: "Sviluppatore", email: "membro@example.it", capacitaPunti: 80, teamId: teamDemo.id, userId: utenteMembro?.id ?? null })
-    .returning();
-  const [progettoDemo] = await db
+    .values({
+      nome: "membro",
+      ruolo: "Sviluppatore",
+      email: "membro@example.it",
+      capacitaPunti: 80,
+      teamId: teamDemo!.id,
+      userId: utenteMembro?.id ?? null,
+    })
+    .returning())[0];
+
+const [progettoTrovato] = await db.select().from(schema.projects).where(eq(schema.projects.nome, "Progetto Demo"));
+const progettoDemo =
+  progettoTrovato ??
+  (await db
     .insert(schema.projects)
-    .values({ nome: "Progetto Demo", priorita: "media", inizio: "2026-09-01", fine: "2026-12-31", teamId: teamDemo.id })
-    .returning();
-  if (progettoDemo && membroDemo) {
-    const attivitaDemo = await db
-      .insert(schema.tasks)
-      .values([
-        { projectId: progettoDemo.id, nome: "Sviluppo front-end", inizio: "2026-09-14", fine: "2026-09-18", fase: "Analisi" },
-        { projectId: progettoDemo.id, nome: "App Prenotazioni", inizio: "2026-09-14", fine: "2026-09-18", fase: "Sviluppo" },
-      ])
-      .returning();
-    if (attivitaDemo.length === 2) {
-      await db.insert(schema.assignments).values([
-        { taskId: attivitaDemo[0]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
-        { taskId: attivitaDemo[1]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
-      ]);
-    }
-  }
+    .values({ nome: "Progetto Demo", priorita: "media", inizio: "2026-09-01", fine: "2026-12-31", teamId: teamDemo!.id })
+    .returning())[0];
+
+const attivitaEsistenti = await db.select().from(schema.tasks).where(eq(schema.tasks.projectId, progettoDemo!.id));
+if (attivitaEsistenti.length === 0) {
+  await db.insert(schema.tasks).values([
+    { projectId: progettoDemo!.id, nome: "Sviluppo front-end", inizio: "2026-09-14", fine: "2026-09-18", fase: "Analisi" },
+    { projectId: progettoDemo!.id, nome: "App Prenotazioni", inizio: "2026-09-14", fine: "2026-09-18", fase: "Sviluppo" },
+  ]);
+}
+const attivitaDemo = await db.select().from(schema.tasks).where(eq(schema.tasks.projectId, progettoDemo!.id));
+
+const assegnazioniEsistenti = await db
+  .select()
+  .from(schema.assignments)
+  .where(eq(schema.assignments.taskId, attivitaDemo[0]!.id));
+if (membroDemo && attivitaDemo.length >= 2 && assegnazioniEsistenti.length === 0) {
+  await db.insert(schema.assignments).values([
+    { taskId: attivitaDemo[0]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
+    { taskId: attivitaDemo[1]!.id, memberId: membroDemo.id, percento: 60, dal: "2026-09-14", al: "2026-09-18" },
+  ]);
 }
 
 process.stdout.write(`Seed completato: ${inseriti.length} utenti creati (password: CambiaQuesta1! — cambiarla al primo accesso).\n`);
