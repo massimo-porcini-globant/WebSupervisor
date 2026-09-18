@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F09-allocazione-risorse",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/009-allocazione-risorse",
+  "current_phase": 5,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:58:15Z",
+      "artifacts": [],
+      "required": "docs/F09-allocazione-risorse/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:58:57Z",
+      "artifacts": [],
+      "required": [
+        "docs/F09-allocazione-risorse/phase-3-plan/asd.md",
+        "plans/features/F09-allocazione-risorse/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "pending",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "locked",
+      "timestamp": null,
+      "artifacts": [],
+      "required": [
+        "docs/F09-allocazione-risorse/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-18T07:57:28Z"
+    }
+  ]
+}
