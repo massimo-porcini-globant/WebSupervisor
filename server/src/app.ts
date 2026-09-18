@@ -14,6 +14,7 @@ import { registraRouteProgetti } from "./routes/progetti.js";
 import { registraRouteAttivita } from "./routes/attivita.js";
 import { registraRouteGantt } from "./routes/gantt.js";
 import { registraRouteTeam } from "./routes/team.js";
+import { registraRouteAllocazione } from "./routes/allocazione.js";
 
 export interface OpzioniApp {
   percorsoDb: string;
@@ -34,6 +35,7 @@ export async function costruisceApp(opzioni: OpzioniApp): Promise<{ app: Fastify
       await registraRouteAttivita(istanza, db);
       await registraRouteGantt(istanza, db);
       await registraRouteTeam(istanza, db);
+      await registraRouteAllocazione(istanza, db);
     },
     { prefix: "/api/v1" }
   );
