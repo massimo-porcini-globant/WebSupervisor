@@ -1,10 +1,10 @@
-﻿# Initiative Plan: F12-cancella-progetto
+# Initiative Plan: F12-cancella-progetto
 
 ---
 initiative:
   id: F12-cancella-progetto
   type: feature
-  status: in_progress
+  status: completed
   owner: Massimo Porcini (Engineering)
   vendor: none
 flow: {phase: 1, producer: sdd-gate, consumer: team, gate: gate_1_specify}
@@ -24,8 +24,8 @@ Initiative F12-cancella-progetto (feature) initialized.
 ## 4. Progress & Status
 - [ ] Gate 1: Specify (PRD / Brief)
 - [ ] Gate 2: Architecture & Tasks (ASD & Plan ratified)
-- [ ] Gate 3: Implementation & Tests
-- [ ] Gate 4: Verification & Release
+- [x] Gate 3: Implementation & Tests
+- [x] Gate 4: Verification & Release
 
 ### Work Log
 - **2026-09-18T09:52:12Z** — Initiative initialized by Massimo Porcini (Engineering).

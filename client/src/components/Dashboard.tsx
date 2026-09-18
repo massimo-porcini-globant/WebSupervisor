@@ -57,6 +57,16 @@ export default function Dashboard({ utente }: { utente: Utente }) {
     void carica();
   }, [carica]);
 
+  async function rimuovi(p: ProgettoConAvanzamento) {
+    if (!window.confirm(it.progetti.confermaRimozione.replace("{nome}", p.nome))) return;
+    try {
+      await api.rimuoviProgetto(p.id);
+      await carica();
+    } catch (err) {
+      setErrore(err instanceof ErroreApi && err.stato === 403 ? it.progetti.errorePermesso : it.progetti.erroreCaricamento);
+    }
+  }
+
   const vuoto = progetti.length === 0 && !errore;
 
   return (
@@ -143,7 +153,12 @@ export default function Dashboard({ utente }: { utente: Utente }) {
                     <strong>{p.nome}</strong>{" "}
                     <button className="pulsante pulsante-chiaro" type="button" onClick={() => setProgettoAttivita(p)}>
                       {it.attivita.titolo}
-                    </button>
+                    </button>{" "}
+                    {puoScrivere && (
+                      <button className="pulsante pulsante-chiaro" type="button" onClick={() => void rimuovi(p)}>
+                        {it.progetti.rimuovi}
+                      </button>
+                    )}
                   </td>
                   <td>{p.teamId ?? "—"}</td>
                   <td>

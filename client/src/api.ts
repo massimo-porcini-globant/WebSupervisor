@@ -57,6 +57,7 @@ export const api = {
   },
   creaProgetto: (corpo: unknown) =>
     chiama<{ progetto: Progetto }>("/progetti", { method: "POST", body: JSON.stringify(corpo) }),
+  rimuoviProgetto: (id: number) => chiama<{ ok: boolean }>(`/progetti/${id}`, { method: "DELETE" }),
   kpiProgetto: (idProgetto: number) => chiama<{ kpi: KpiProgetto }>(`/progetti/${idProgetto}/kpi`),
   gantt: (idProgetto: number) => chiama<Gantt>(`/progetti/${idProgetto}/gantt`),
   aggiornaAttivita: (id: number, patch: Record<string, unknown>) =>

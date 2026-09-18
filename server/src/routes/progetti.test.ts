@@ -9,7 +9,8 @@ import path from "node:path";
 import bcrypt from "bcryptjs";
 import type { FastifyInstance } from "fastify";
 import { costruisceApp } from "../app.js";
-import { schema } from "../data/db.js";
+import { schema, type Db } from "../data/db.js";
+import { eq } from "drizzle-orm";
 import type { Ruolo } from "@ws/shared";
 
 const segreto = "test-secret-per-vitest-non-usare-in-prod-123456";
@@ -17,6 +18,7 @@ const RUOLI: Ruolo[] = ["amministratore", "project_manager", "membro", "osservat
 
 describe("progetti (E2.1/E2.2)", () => {
   let app: FastifyInstance;
+  let db: Db;
   const cartellaTemp = mkdtempSync(path.join(tmpdir(), "ws-progetti-"));
 
   beforeAll(async () => {
@@ -26,7 +28,7 @@ describe("progetti (E2.1/E2.2)", () => {
       eseguiMigrations: true,
     });
     app = costruito.app;
-    const db = costruito.db;
+    db = costruito.db;
     await app.ready();
     await db
       .insert(schema.users)
@@ -180,4 +182,52 @@ describe("progetti (E2.1/E2.2)", () => {
     await app.close();
     rmSync(cartellaTemp, { recursive: true, force: true });
   });
+
+  describe("DELETE /progetti/:id (F12)", () => {
+    it("401 senza sessione, 403 per membro, 404 per progetto inesistente", async () => {
+      const senza = await app.inject({ method: "DELETE", url: "/api/v1/progetti/1" });
+      expect(senza.statusCode).toBe(401);
+
+      const membro = await cookieDi("membro");
+      const vietato = await app.inject({ method: "DELETE", url: "/api/v1/progetti/1", cookies: { ws_token: membro } });
+      expect(vietato.statusCode).toBe(403);
+
+      const pm = await cookieDi("project_manager");
+      const mancante = await app.inject({ method: "DELETE", url: "/api/v1/progetti/9999", cookies: { ws_token: pm } });
+      expect(mancante.statusCode).toBe(404);
+    });
+
+    it("rimuove progetto con cascata: assegnazioni, dipendenze e attività (F12/AD-29)", async () => {
+      const pm = await cookieDi("project_manager");
+      const [progetto] = await db
+        .insert(schema.projects)
+        .values({ nome: "Da cancellare", priorita: "media", inizio: "2026-09-01", fine: "2026-10-31" })
+        .returning();
+      const idProgetto = progetto!.id;
+      const attivita = await db
+        .insert(schema.tasks)
+        .values([
+          { projectId: idProgetto, nome: "A", inizio: "2026-09-01", fine: "2026-09-05" },
+          { projectId: idProgetto, nome: "B", inizio: "2026-09-06", fine: "2026-09-10" },
+        ])
+        .returning();
+      await db.insert(schema.taskDependencies).values({ taskId: attivita[1]!.id, dependsOn: attivita[0]!.id });
+      const [membro] = await db
+        .insert(schema.members)
+        .values({ nome: "Temp", ruolo: "Dev", email: "temp@example.it", capacitaPunti: 80 })
+        .returning();
+      await db.insert(schema.assignments).values({ taskId: attivita[0]!.id, memberId: membro!.id, percento: 50, dal: "2026-09-01", al: "2026-09-05" });
+
+      const rimozione = await app.inject({ method: "DELETE", url: `/api/v1/progetti/${idProgetto}`, cookies: { ws_token: pm } });
+      expect(rimozione.statusCode).toBe(200);
+
+      expect((await db.select().from(schema.projects).where(eq(schema.projects.id, idProgetto))).length).toBe(0);
+      expect((await db.select().from(schema.tasks).where(eq(schema.tasks.projectId, idProgetto))).length).toBe(0);
+      expect((await db.select().from(schema.assignments).where(eq(schema.assignments.taskId, attivita[0]!.id))).length).toBe(0);
+      expect(
+        (await db.select().from(schema.taskDependencies).where(eq(schema.taskDependencies.taskId, attivita[1]!.id))).length
+      ).toBe(0);
+    });
+  }
+);
 });
