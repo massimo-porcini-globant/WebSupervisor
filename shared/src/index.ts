@@ -6,4 +6,5 @@ export * from "./types/index.js";
 export * from "./schemas/auth.js";
 export * from "./schemas/progetti.js";
 export * from "./schemas/attivita.js";
+export * from "./schemas/team.js";
 export * from "./i18n/it.js";

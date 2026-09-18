@@ -25,21 +25,27 @@ export const members = sqliteTable(
     nome: text("nome").notNull(),
     ruolo: text("ruolo").notNull(),
     email: text("email").notNull(),
+    competenze: text("competenze"),
     capacitaPunti: integer("capacita_punti").notNull().default(100),
     teamId: integer("team_id").references(() => teams.id),
   },
   t => [index("members_team_idx").on(t.teamId)]
 );
 
-export const memberAbsences = sqliteTable("member_absences", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  memberId: integer("member_id")
-    .notNull()
-    .references(() => members.id),
-  dal: text("dal").notNull(),
-  al: text("al").notNull(),
-  motivo: text("motivo"),
-});
+export const memberAbsences = sqliteTable(
+  "member_absences",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    memberId: integer("member_id")
+      .notNull()
+      .references(() => members.id),
+    dal: text("dal").notNull(),
+    al: text("al").notNull(),
+    motivo: text("motivo").notNull(),
+    impattoPercento: integer("impatto_percento").notNull().default(100),
+  },
+  t => [index("member_absences_member_idx").on(t.memberId)]
+);
 
 export const projects = sqliteTable(
   "projects",

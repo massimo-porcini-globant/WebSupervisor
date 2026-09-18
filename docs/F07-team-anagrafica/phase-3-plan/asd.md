@@ -13,9 +13,9 @@ email, capacitaPunti, teamId→teams.id)`, `projects(teamId)`. Mockup M3 approva
 API e UI per team, membri e assenze (RF-14..16), pronte per l'allocazione E6.
 
 ## 3. Decisioni architetturali
-- **AD-8 (schema)**: nuova migration drizzle: `members.competenze` (TEXT NULL) e tabella
-  `absences(id, memberId → members.id, dal, al, motivo, impattoPercento)`; FK con sintassi
-  `REFERENCES tab (col)` (lezione F03). Nessuna modifica a teams/projects.
+- **AD-8 (schema)**: nuova migration drizzle `0001_team_assenze`: `members.competenze` (TEXT NULL) e
+  `member_absences.impattoPercento` (INTEGER NOT NULL DEFAULT 100); si riusa la tabella esistente
+  `member_absences(id, member_id→members.id, dal, al, motivo)`. Nessuna nuova tabella necessaria.
 - **AD-9 (contratti)**: schemi Zod in `shared/src/schemas/team.ts` (AD-5): teamSchema (nome 1..80),
   membroSchema (nome 1..120, ruolo 1..80, email, competenze max 400 opz., capacitaPunti 1..200),
   membroPatch = .partial(), assenzaSchema (dal ≤ al, motivo 1..120, impattoPercento 0..100).

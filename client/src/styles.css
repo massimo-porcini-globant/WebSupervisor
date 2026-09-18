@@ -268,3 +268,17 @@ table.dati .data { font-variant-numeric: tabular-nums; white-space: nowrap; colo
 .editor-dipendenze h2 { margin-bottom: 0.5rem; }
 .riga-dipendenza { display: flex; align-items: center; gap: 0.75rem; padding: 0.35rem 0; }
 .riga-dipendenza select { padding: 0.4rem 0.6rem; border: 1px solid #cdd2da; border-radius: 6px; }
+
+/* Team (F07) */
+.griglia-membri { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+.scheda-membro { display: flex; gap: 1rem; padding: 1rem; border: 1px solid #e2e5ea; border-radius: 10px; background: #fff; }
+.scheda-membro .avatar { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; color: #fff; font-weight: 600; flex-shrink: 0; }
+.scheda-membro .corpo { flex: 1; min-width: 0; }
+.scheda-membro .riga-nome { display: flex; align-items: baseline; gap: 10px; }
+.scheda-membro .ruolo { color: var(--inchiostro-secondario, #5b6470); font-size: 13px; }
+.scheda-membro .email { font-size: 13px; color: var(--inchiostro-secondario, #5b6470); margin: 2px 0 8px; }
+.competenze { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.tag-competenza { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef1f5; font-size: 12px; }
+.disponibilita { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.disponibilita .traccia { flex: 1; }
+.azioni-scheda { display: flex; gap: 0.5rem; margin-top: 10px; }
