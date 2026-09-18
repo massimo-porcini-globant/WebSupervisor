@@ -10,6 +10,9 @@ import type {
   KpiProgetto,
   Gantt,
   Attivita,
+  TeamConMembri,
+  Membro,
+  Assenza,
 } from "@ws/shared";
 
 export class ErroreApi extends Error {
@@ -59,4 +62,16 @@ export const api = {
     chiama<{ dipendenza: unknown }>(`/attivita/${id}/dipendenze`, { method: "POST", body: JSON.stringify({ dependsOn }) }),
   rimuoviDipendenza: (id: number, dependsOn: number) =>
     chiama<{ ok: boolean }>(`/attivita/${id}/dipendenze/${dependsOn}`, { method: "DELETE" }),
+  team: () => chiama<{ team: TeamConMembri[] }>("/team"),
+  creaTeam: (nome: string) => chiama<{ team: { id: number; nome: string } }>("/team", { method: "POST", body: JSON.stringify({ nome }) }),
+  membri: (idTeam: number) => chiama<{ membri: Membro[] }>(`/team/${idTeam}/membri`),
+  creaMembro: (idTeam: number, corpo: Record<string, unknown>) =>
+    chiama<{ membro: Membro }>(`/team/${idTeam}/membri`, { method: "POST", body: JSON.stringify(corpo) }),
+  aggiornaMembro: (id: number, patch: Record<string, unknown>) =>
+    chiama<{ membro: Membro }>(`/membri/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
+  rimuoviMembro: (id: number) => chiama<{ ok: boolean; assegnazioniRimosse: number }>(`/membri/${id}`, { method: "DELETE" }),
+  assenze: (idMembro: number) => chiama<{ assenze: Assenza[] }>(`/membri/${idMembro}/assenze`),
+  creaAssenza: (idMembro: number, corpo: Record<string, unknown>) =>
+    chiama<{ assenza: Assenza }>(`/membri/${idMembro}/assenze`, { method: "POST", body: JSON.stringify(corpo) }),
+  rimuoviAssenza: (id: number) => chiama<{ ok: boolean }>(`/assenze/${id}`, { method: "DELETE" }),
 };

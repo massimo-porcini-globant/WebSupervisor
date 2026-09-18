@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://agentskills.io/schemas/sdd-state.v1.json",
+  "initiative": "F07-team-anagrafica",
+  "tier": "feature",
+  "vendor": null,
+  "owner": {
+    "name": "Massimo Porcini",
+    "email": "massimo.porcini@globant.com",
+    "role": "Engineering"
+  },
+  "branch": "agent/007-team-anagrafica",
+  "current_phase": 7,
+  "status": "in_progress",
+  "gates": {
+    "gate_1_specify": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:03:41Z",
+      "artifacts": [],
+      "required": "docs/F07-team-anagrafica/phase-1-specify/prd.md"
+    },
+    "gate_2_architecture": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:04:07Z",
+      "artifacts": [],
+      "required": [
+        "docs/F07-team-anagrafica/phase-3-plan/asd.md",
+        "plans/features/F07-team-anagrafica/plan.md"
+      ]
+    },
+    "gate_3_implementation": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:10:43Z",
+      "artifacts": [],
+      "required": [
+        "tests"
+      ]
+    },
+    "gate_4_release": {
+      "status": "passed",
+      "timestamp": "2026-09-18T07:11:08Z",
+      "artifacts": [],
+      "required": [
+        "docs/F07-team-anagrafica/phase-6-verify/release-notes.md"
+      ]
+    }
+  },
+  "history": [
+    {
+      "phase": 0,
+      "action": "initialized",
+      "timestamp": "2026-09-18T07:02:31Z"
+    }
+  ]
+}
